@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.WebApi",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.Core", "Rag.SemanticKernel.Core\Rag.SemanticKernel.Core.csproj", "{B112BD79-8093-CFA5-12DF-EDEEB90F79D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.SemanticKernel.Connectors.Elasticsearch", "semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj", "{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,6 +34,10 @@ Global
 		{B112BD79-8093-CFA5-12DF-EDEEB90F79D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B112BD79-8093-CFA5-12DF-EDEEB90F79D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B112BD79-8093-CFA5-12DF-EDEEB90F79D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

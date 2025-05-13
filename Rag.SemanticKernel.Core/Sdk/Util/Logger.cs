@@ -1,15 +1,21 @@
 ﻿
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace Rag.SemanticKernel.Core.Sdk.Util;
 
 public class Logger
 {
-    public void Init()
+    public string LogFileName { get; private set; }
+
+    public Logger(IConfiguration configuration)
     {
+        LogFileName = configuration["Log:FileName"]!;
+
         Log.Logger = new LoggerConfiguration()
         .WriteTo.Console()
-        .WriteTo.File("log.txt")
+        .WriteTo.File(LogFileName)
         .CreateLogger();
     }
 

@@ -6,12 +6,14 @@ public class Settings
 {
     public Settings()
     {
-        var config = new ConfigurationBuilder()
+        Configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .Build();
 
-        IndexName = config.GetSection("IndexName").Get<string>()!;
+        IndexName = Configuration.GetSection("IndexName").Get<string>()!;
     }
 
     public string IndexName { get; set; }
+    public IConfigurationRoot Configuration { get; }
 }

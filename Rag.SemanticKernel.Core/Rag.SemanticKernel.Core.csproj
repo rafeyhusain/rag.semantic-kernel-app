@@ -1,19 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+	<NoWarn>$(NoWarn);SKEXP0020</NoWarn>
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Compile Remove="Rag.SemanticKernel.App\obj\**" />
-    <EmbeddedResource Remove="Rag.SemanticKernel.App\obj\**" />
-    <None Remove="Rag.SemanticKernel.App\obj\**" />
+    <Compile Remove="Rag.SemanticKernel.App\**" />
+    <Compile Remove="Rag.SemanticKernel.WebApi\**" />
+    <EmbeddedResource Remove="Rag.SemanticKernel.App\**" />
+    <EmbeddedResource Remove="Rag.SemanticKernel.WebApi\**" />
+    <None Remove="Rag.SemanticKernel.App\**" />
+    <None Remove="Rag.SemanticKernel.WebApi\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="NEST" Version="7.17.5" />
+    <PackageReference Include="Elastic.Clients.Elasticsearch" Version="9.0.3" />
+    <PackageReference Include="Elastic.SemanticKernel.Connectors.Elasticsearch" Version="0.1.2" />
+    <PackageReference Include="Microsoft.SemanticKernel" Version="1.49.0" />
 	<PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="9.0.4" />
 	<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.4" />

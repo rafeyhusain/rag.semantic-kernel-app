@@ -35,7 +35,7 @@ internal sealed class Program
         kernelBuilder.AddVectorStoreTextSearch<Hotel>();
 
         // Register Elasticsearch vector store.
-        var elasticsearchClientSettings = new ElasticsearchClientSettings(new Uri("https://my-elasticsearch-instance.cloud"))
+        var elasticsearchClientSettings = new ElasticsearchClientSettings(new Uri("http://localhost:9200"))
             .Authentication(new BasicAuthentication("elastic", "my_password"));
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>("skhotels", elasticsearchClientSettings);
 
@@ -62,7 +62,7 @@ internal sealed class Program
         foreach (var chunk in hotels.Chunk(25))
         {
             var descriptionEmbeddings = await embeddings.GenerateEmbeddingsAsync(chunk.Select(x => x[2]).ToArray());
-            
+
             for (var i = 0; i < chunk.Length; ++i)
             {
                 var hotel = chunk[i];

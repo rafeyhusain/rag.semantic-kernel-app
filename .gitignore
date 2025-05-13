@@ -3,3 +3,6 @@
 ################################################################################
 
 /.vs
+/Elastic.SemanticKernel.Playground/obj
+/Rag.SemanticKernel.App/bin/Debug
+/Rag.SemanticKernel.App/obj

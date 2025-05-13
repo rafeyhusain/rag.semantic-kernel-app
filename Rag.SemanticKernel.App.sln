@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.App", "Rag.SemanticKernel.App\Rag.SemanticKernel.App.csproj", "{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -16,16 +14,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.SemanticKernel.Connectors.Elasticsearch", "semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj", "{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.SemanticKernel.Playground", "semantic-kernel-net\Elastic.SemanticKernel.Playground\Elastic.SemanticKernel.Playground.csproj", "{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.App", "Rag.SemanticKernel.App\Rag.SemanticKernel.App.csproj", "{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{45694E5A-B7E3-4707-8D49-9CF4538CBEDB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{45694E5A-B7E3-4707-8D49-9CF4538CBEDB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{45694E5A-B7E3-4707-8D49-9CF4538CBEDB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -38,6 +36,14 @@ Global
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

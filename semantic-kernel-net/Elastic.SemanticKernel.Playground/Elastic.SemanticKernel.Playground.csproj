@@ -25,4 +25,10 @@
     <ProjectReference Include="..\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="hotels.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

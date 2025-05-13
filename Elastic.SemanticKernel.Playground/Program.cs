@@ -14,7 +14,7 @@ using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
-namespace Rag.SemanticKernel.App;
+namespace Elastic.SemanticKernel.Playground;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 
@@ -43,6 +43,7 @@ internal sealed class Program
         using var host = builder.Build();
 
         // For demo purposes, we access the services directly without using a DI context.
+
         var kernel = host.Services.GetService<Kernel>()!;
         var embeddings = host.Services.GetService<ITextEmbeddingGenerationService>()!;
         var vectorStoreCollection = host.Services.GetService<IVectorStoreRecordCollection<string, Hotel>>()!;
@@ -61,7 +62,7 @@ internal sealed class Program
         foreach (var chunk in hotels.Chunk(25))
         {
             var descriptionEmbeddings = await embeddings.GenerateEmbeddingsAsync(chunk.Select(x => x[2]).ToArray());
-            
+
             for (var i = 0; i < chunk.Length; ++i)
             {
                 var hotel = chunk[i];

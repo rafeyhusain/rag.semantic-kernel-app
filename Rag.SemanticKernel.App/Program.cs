@@ -11,7 +11,7 @@ internal class Program
 
         var logger = new Logger(settings.Configuration);
 
-        logger.Info("RAG Semantic Search App Started...");
+        logger.Info("Semantic Search App Started...");
 
         await Task.CompletedTask;
 

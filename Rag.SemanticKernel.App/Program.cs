@@ -1,130 +1,66 @@
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-
-using Elastic.Clients.Elasticsearch;
-using Elastic.Transport;
-
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+using Microsoft.SemanticKernel;
+using Rag.SemanticKernel.Core.Sdk.Service.Azure;
+using Serilog;
 
 namespace Rag.SemanticKernel.App;
-
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 
 internal sealed class Program
 {
     public static async Task Main(string[] args)
     {
-#pragma warning disable SKEXP0010 // Some SK methods are still experimental
+        //try
+        //{
+            Log.Information("Starting application");
 
-        var builder = Host.CreateApplicationBuilder(args);
+            var builder = Host.CreateApplicationBuilder(args);
 
-        // Register AI services.
-        var kernelBuilder = builder.Services.AddKernel();
-        kernelBuilder.AddAzureOpenAIChatCompletion("gpt-4o", "https://my-service.openai.azure.com", "my_token");
-        kernelBuilder.AddAzureOpenAITextEmbeddingGeneration("ada-002", "https://my-service.openai.azure.com", "my_token");
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables()
+                .Build();
 
-        // Register text search service.
-        kernelBuilder.AddVectorStoreTextSearch<Hotel>();
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.File(configuration["Log:FileName"] ?? "log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
 
-        // Register Elasticsearch vector store.
-        var elasticsearchClientSettings = new ElasticsearchClientSettings(new Uri("http://localhost:9200"))
-            .Authentication(new BasicAuthentication("elastic", "my_password"));
-        kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>("skhotels", elasticsearchClientSettings);
+            builder.Services.AddSingleton<IConfiguration>(configuration);
 
-        // Build the host.
-        using var host = builder.Build();
+            builder.Services.AddAzureEmbeddingServices(configuration);
 
-        // For demo purposes, we access the services directly without using a DI context.
-        var kernel = host.Services.GetService<Kernel>()!;
-        var embeddings = host.Services.GetService<ITextEmbeddingGenerationService>()!;
-        var vectorStoreCollection = host.Services.GetService<IVectorStoreRecordCollection<string, Hotel>>()!;
+            builder.Services.AddSingleton<EmbeddingService>();
 
-        // Register search plugin.
-        var textSearch = host.Services.GetService<VectorStoreTextSearch<Hotel>>()!;
-        kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
+            var host = builder.Build();
 
-        // Crate collection and ingest a few demo records.
-        await vectorStoreCollection.CreateCollectionIfNotExistsAsync();
+            // Register search plugin.
+            var kernel = host.Services.GetService<Kernel>()!;
+            var textSearch = host.Services.GetService<VectorStoreTextSearch<Hotel>>()!;
+            kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
 
-        // CSV format: ID;Hotel Name;Description;Reference Link
-        var hotels = (await File.ReadAllLinesAsync("hotels.csv"))
-            .Select(x => x.Split(';'));
+            var embeddingService = host.Services.GetRequiredService<EmbeddingService>();
+            await embeddingService.Ask(args);
 
-        foreach (var chunk in hotels.Chunk(25))
-        {
-            var descriptionEmbeddings = await embeddings.GenerateEmbeddingsAsync(chunk.Select(x => x[2]).ToArray());
-            
-            for (var i = 0; i < chunk.Length; ++i)
-            {
-                var hotel = chunk[i];
-                await vectorStoreCollection.UpsertAsync(new Hotel
-                {
-                    HotelId = hotel[0],
-                    HotelName = hotel[1],
-                    Description = hotel[2],
-                    DescriptionEmbedding = descriptionEmbeddings[i],
-                    ReferenceLink = hotel[3]
-                });
-            }
-        }
+            Log.Information("Application completed successfully");
 
-        // Invoke the LLM with a template that uses the search plugin to
-        // 1. get related information to the user query from the vector store
-        // 2. add the information to the LLM prompt.
-        var response = await kernel.InvokePromptAsync(
-            promptTemplate: """
-                            Please use this information to answer the question:
-                            {{#with (SearchPlugin-GetTextSearchResults question)}}
-                              {{#each this}}
-                                Name: {{Name}}
-                                Value: {{Value}}
-                                Source: {{Link}}
-                                -----------------
-                              {{/each}}
-                            {{/with}}
-
-                            Include the source of relevant information in the response.
-
-                            Question: {{question}}
-                            """,
-            arguments: new KernelArguments
-            {
-                { "question", "Please show me all hotels that have a rooftop bar." },
-            },
-            templateFormat: "handlebars",
-            promptTemplateFactory: new HandlebarsPromptTemplateFactory());
-
-        Console.WriteLine(response.ToString());
-
-        // > Urban Chic Hotel has a rooftop bar with stunning views (Source: https://example.com/stu654).
+            Console.ReadKey();
+        //}
+        //catch (Exception ex)
+        //{
+        //    Log.Fatal(ex, "Application terminated unexpectedly");
+        //}
+        //finally
+        //{
+        //    Log.CloseAndFlush();
+        //}
     }
-}
-
-public sealed record Hotel
-{
-    [VectorStoreRecordKey]
-    public required string HotelId { get; set; }
-
-    [TextSearchResultName]
-    [VectorStoreRecordData(IsFilterable = true)]
-    public required string HotelName { get; set; }
-
-    [TextSearchResultValue]
-    [VectorStoreRecordData(IsFullTextSearchable = true)]
-    public required string Description { get; set; }
-
-    [VectorStoreRecordVector(Dimensions: 1536, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
-    public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
-
-    [TextSearchResultLink]
-    [VectorStoreRecordData]
-    public string? ReferenceLink { get; set; }
 }

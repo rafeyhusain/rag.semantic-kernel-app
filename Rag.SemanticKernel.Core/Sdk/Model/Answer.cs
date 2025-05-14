@@ -1,3 +1,5 @@
+using System;
+
 namespace Rag.SemanticKernel.Core.Sdk.Model;
 
 public class Answer

@@ -1,16 +1,14 @@
-﻿//using System.Net.Http.Headers;
+﻿//using System.Net.Http;
+//using System.Net.Http.Headers;
 //using System.Text;
 //using System.Text.Json;
-//using System.Text.Json.Serialization;
 //using Elastic.Clients.Elasticsearch;
 //using Elastic.SemanticKernel.Connectors.Elasticsearch;
 //using Microsoft.Extensions.Configuration;
 //using Microsoft.Extensions.DependencyInjection;
-//using Microsoft.Extensions.VectorData;
 //using Microsoft.SemanticKernel;
-//using Serilog;
 
-//namespace Rag.SemanticKernel.Core.Sdk.Service;
+//namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 
 //public class MistralEmbeddingService
 //{
@@ -88,7 +86,7 @@
 //            }
 
 //            var responseContent = await response.Content.ReadAsStringAsync();
-//            var embeddingResponse = JsonSerializer.Deserialize<MistralEmbeddingResponse>(responseContent);
+//            var embeddingResponse = JsonSerializer.Deserialize<EmbeddingResponse>(responseContent);
 
 //            if (embeddingResponse?.Data == null || embeddingResponse.Data.Count == 0)
 //            {
@@ -233,22 +231,4 @@
 //            throw;
 //        }
 //    }
-//}
-
-///// <summary>
-///// Response model for Mistral embeddings API
-///// </summary>
-//public class MistralEmbeddingResponse
-//{
-//    [JsonPropertyName("data")]
-//    public List<MistralEmbeddingData> Data { get; set; } = new List<MistralEmbeddingData>();
-//}
-
-///// <summary>
-///// Data model for Mistral embeddings
-///// </summary>
-//public class MistralEmbeddingData
-//{
-//    [JsonPropertyName("embedding")]
-//    public float[] Embedding { get; set; } = Array.Empty<float>();
 //}

@@ -2,41 +2,27 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-
-using Elastic.Clients.Elasticsearch;
-using Elastic.Transport;
-
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Data;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 #pragma warning disable SKEXP0010 // Some SK methods are still experimental
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Azure;
 
-public class EmbeddingService
+public class SemanticService
 {
     private readonly IConfiguration _configuration;
-    private readonly ILogger<EmbeddingService> _logger;
-
-    private readonly string _apiKey;
-    private readonly string _embeddingModel;
-    private readonly string _completionModel;
-    private readonly string _elasticsearchUrl;
-    private readonly string _elasticsearchIndexName;
-    private readonly ElasticsearchClient _elasticsearchClient;
+    private readonly ILogger<SemanticService> _logger;
     private readonly ITextEmbeddingGenerationService _embeddingService;
     private readonly IVectorStoreRecordCollection<string, Hotel> _vectorStoreCollection;
     private readonly Kernel _kernel;
 
-    public EmbeddingService(IConfiguration configuration, ILogger<EmbeddingService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection, Kernel kernel)
+    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection, Kernel kernel)
     {
         try
         {
@@ -45,13 +31,6 @@ public class EmbeddingService
             _embeddingService = embeddingService ?? throw new ArgumentNullException(nameof(embeddingService));
             _vectorStoreCollection = vectorStoreCollection ?? throw new ArgumentNullException(nameof(vectorStoreCollection));
             _kernel = kernel ?? throw new ArgumentNullException(nameof(kernel));
-
-            // Load configuration values
-            _apiKey = _configuration["Mistral:ApiKey"] ?? throw new InvalidOperationException("Missing Mistral:ApiKey configuration");
-            _embeddingModel = _configuration["Mistral:EmbeddingModel"] ?? "mistral-embed";
-            _completionModel = _configuration["Mistral:CompletionModel"] ?? "mistral-large-latest";
-            _elasticsearchUrl = _configuration["Elasticsearch:Url"] ?? throw new InvalidOperationException("Missing Elasticsearch:Url configuration");
-            _elasticsearchIndexName = _configuration["Elasticsearch:IndexName"] ?? "markdown";
 
             _logger.LogInformation("EmbeddingService initialized successfully");
         }

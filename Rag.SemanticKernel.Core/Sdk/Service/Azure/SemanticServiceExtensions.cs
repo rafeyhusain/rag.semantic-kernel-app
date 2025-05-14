@@ -12,27 +12,26 @@ using Microsoft.SemanticKernel.Data;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Azure;
 
-public static class EmbeddingServiceExtensions
+public static class SemanticServiceExtensions
 {
-    public static void AddAzureEmbeddingServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSemanticService(this IServiceCollection services, IConfiguration configuration)
     {
         var kernelBuilder = services.AddKernel();
 
-        // These could be read from appsettings.json if desired
-        var openAiEndpoint = configuration["AzureAI:Endpoint"];
-        var openAiKey = configuration["AzureAI:Key"];
-        var gptModel = configuration["AzureAI:GptModel"];
+        var endpoint = configuration["AzureAI:Endpoint"];
+        var apiKey = configuration["AzureAI:ApiKey"];
+        var completionModel = configuration["AzureAI:CompletionModel"];
         var embeddingModel = configuration["AzureAI:EmbeddingModel"];
 
         kernelBuilder.AddAzureOpenAIChatCompletion(
-            gptModel ?? "gpt-4o",
-            openAiEndpoint,
-            openAiKey);
+            completionModel ?? "gpt-4o",
+            endpoint,
+            apiKey);
 
         kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
             embeddingModel ?? "ada-002",
-            openAiEndpoint,
-            openAiKey);
+            endpoint,
+            apiKey);
 
         kernelBuilder.AddVectorStoreTextSearch<Hotel>();
 
@@ -45,7 +44,13 @@ public static class EmbeddingServiceExtensions
             .Authentication(new BasicAuthentication(elasticUser, elasticPassword));
 
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>(elasticIndex, elasticsearchClientSettings);
+    }
 
+    public static void AddSemanticService(this IHost host)
+    {
+        var kernel = host.Services.GetService<Kernel>()!;
+        var textSearch = host.Services.GetService<VectorStoreTextSearch<Hotel>>()!;
+        kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
     }
 }
 

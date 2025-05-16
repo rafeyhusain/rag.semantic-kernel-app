@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net.Http;
 using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using Microsoft.Extensions.Configuration;
@@ -7,9 +6,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
+using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+using Microsoft.SemanticKernel.TextGeneration;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 #pragma warning disable SKEXP0010 // Some SK methods are still experimental
@@ -22,22 +23,22 @@ public static class SemanticServiceExtensions
     {
         var kernelBuilder = services.AddKernel();
 
-        kernelBuilder.AddMistralTextEmbeddingGeneration();
+        var endpoint = configuration["Mistral:Endpoint"];
+        var apiKey = configuration["Mistral:ApiKey"];
+        var completionModel = configuration["Mistral:CompletionModel"];
+        var embeddingModel = configuration["Mistral:EmbeddingModel"];
 
-        //var endpoint = configuration["Mistral:Endpoint"];
-        //var apiKey = configuration["Mistral:ApiKey"];
-        //var completionModel = configuration["Mistral:CompletionModel"];
-        //var embeddingModel = configuration["Mistral:EmbeddingModel"];
+        kernelBuilder.AddMistralChatCompletion(
+            completionModel,
+            endpoint,
+            apiKey
+            );
 
-        //kernelBuilder.AddAzureOpenAIChatCompletion(
-        //    completionModel ?? "gpt-4o",
-        //    endpoint,
-        //    apiKey);
-
-        //kernelBuilder.AddAzureOpenAITextEmbeddingGeneration(
-        //    embeddingModel ?? "ada-002",
-        //    endpoint,
-        //    apiKey);
+        kernelBuilder.AddMistralTextEmbeddingGeneration(
+            embeddingModel,
+            endpoint,
+            apiKey
+            );
 
         kernelBuilder.AddVectorStoreTextSearch<Hotel>();
 
@@ -60,13 +61,61 @@ public static class SemanticServiceExtensions
     }
 
     public static IKernelBuilder AddMistralTextEmbeddingGeneration(
-     this IKernelBuilder builder,
-     string? serviceId = null)
+        this IKernelBuilder builder,
+        string embeddingModel = null,
+        string endpoint = null,
+        string apiKey = null)
     {
-        builder.Services.AddKeyedSingleton<ITextEmbeddingGenerationService>(serviceId, (serviceProvider, _) =>
-            new EmbeddingService());
+        builder.Services.AddKeyedSingleton<ITextEmbeddingGenerationService>(embeddingModel, (sp, _) =>
+            new EmbeddingService(
+                sp.GetService<ILogger<SemanticService>>(),
+                endpoint,
+                apiKey,
+                embeddingModel
+            ));
+
+        // Register default embedding service (non-keyed) for VectorStoreTextSearch<T>
+        builder.Services.AddSingleton<ITextEmbeddingGenerationService>(sp =>
+            new EmbeddingService(
+                sp.GetService<ILogger<SemanticService>>(),
+                endpoint,
+                apiKey,
+                embeddingModel
+            ));
 
         return builder;
     }
+
+    public static IKernelBuilder AddMistralChatCompletion(
+      this IKernelBuilder builder,
+      string completionModel = null,
+      string endpoint = null,
+      string apiKey = null)
+    {
+        Func<IServiceProvider, object, ChatCompletionService> factory = (serviceProvider, _) =>
+        {
+            return new ChatCompletionService(
+                serviceProvider.GetService<ILogger<SemanticService>>(),
+                endpoint,
+                apiKey,
+                completionModel
+            );
+        };
+
+        builder.Services.AddKeyedSingleton<IChatCompletionService>(completionModel, factory);
+        builder.Services.AddKeyedSingleton<ITextGenerationService>(completionModel, factory);
+
+        // Register default (non-keyed) ITextGenerationService
+        builder.Services.AddSingleton<ITextGenerationService>(sp =>
+            new ChatCompletionService(
+                sp.GetService<ILogger<SemanticService>>(),
+                endpoint,
+                apiKey,
+                completionModel
+            ));
+
+        return builder;
+    }
+
 }
 

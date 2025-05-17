@@ -12,6 +12,7 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+using Rag.SemanticKernel.Core.Sdk.Util;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 #pragma warning disable SKEXP0010 // Some SK methods are still experimental
@@ -24,7 +25,7 @@ public class SemanticService
     private readonly ILogger<SemanticService> _logger;
     private readonly ITextEmbeddingGenerationService _embeddingService;
     private readonly IVectorStoreRecordCollection<string, Hotel> _vectorStoreCollection;
-    private readonly Kernel _kernel;
+    private Kernel _kernel;
 
     private readonly HttpClient _httpClient;
     private readonly string _apiKey;
@@ -32,7 +33,7 @@ public class SemanticService
     private readonly string _elasticsearchUrl;
     private readonly string _elasticsearchIndexName;
 
-    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection, Kernel kernel)
+    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection)
     {
         try
         {
@@ -40,9 +41,6 @@ public class SemanticService
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _embeddingService = embeddingService ?? throw new ArgumentNullException(nameof(embeddingService));
             _vectorStoreCollection = vectorStoreCollection ?? throw new ArgumentNullException(nameof(vectorStoreCollection));
-            _kernel = kernel ?? throw new ArgumentNullException(nameof(kernel));
-
-            //RegisterSearchPlugin();
 
             _logger.LogInformation("SemanticService initialized successfully");
         }
@@ -53,21 +51,20 @@ public class SemanticService
         }
     }
 
-    private void RegisterSearchPlugin()
+    public async Task Ask(Kernel kernel)
     {
-        // Create a TextSearchPlugin that can search the vector collection
-        var searchPlugin = new VectorStoreTextSearch<Hotel>(_vectorStoreCollection, _embeddingService);
+        _kernel = kernel ?? throw new ArgumentNullException(nameof(kernel));
 
-        // Register the plugin with the kernel
-        _kernel.Plugins.Add(searchPlugin.CreateWithGetTextSearchResults("SearchPlugin"));
-
-        _logger.LogInformation("SearchPlugin registered successfully");
-    }
-
-    public async Task Ask(string[] args)
-    {
-        //await CreateEmbeddings("hotels.csv");
-        await GetAnswer();
+        try
+        {
+            await CreateEmbeddings("hotels.csv");
+            await GetAnswer();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogCritical2(ex, "Error in SemanticService.Ask");
+            throw;
+        }
     }
 
     private async Task CreateEmbeddings(string filePath)
@@ -87,9 +84,9 @@ public class SemanticService
         {
             var descriptions = chunk.Select(x => x[2]).ToArray();
 
-            var descriptionEmbeddings = await GenerateWithRetry(descriptions);
+            var embeddings = await GenerateWithRetry(descriptions);
 
-            for (var i = 0; i < chunk.Length && i < descriptionEmbeddings.Count; ++i)
+            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
             {
                 var hotel = chunk[i];
                 await _vectorStoreCollection.UpsertAsync(new Hotel
@@ -97,38 +94,37 @@ public class SemanticService
                     HotelId = hotel[0],
                     HotelName = hotel[1],
                     Description = hotel[2],
-                    DescriptionEmbedding = descriptionEmbeddings[i],
+                    Embeddings = embeddings[i],
                     Link = hotel[3]
                 });
             }
         }
     }
 
-    private async Task GetAnswer2()
+    private async Task GetAnswer()
     {
-        // First, execute the search function directly
-        var searchResults = await _kernel.InvokeAsync("SearchPlugin", "GetTextSearchResults",
-            new KernelArguments { { "input", "Please show me all hotels that have a rooftop bar." } });
-
-        // Create a prompt with the search results
-        var searchResultsStr = searchResults.GetValue<string>();
-
-        // Now pass the search results to a simpler prompt
-        var promptTemplate = """
-            Please use this information to answer the question:
-            {{searchResults}}
-
-            Include the source of relevant information in the response.
-
-            Question: {{question}}
-            """;
-
+        // Invoke the LLM with a template that uses the search plugin to
+        // 1. get related information to the user query from the vector store
+        // 2. add the information to the LLM prompt.
         var response = await _kernel.InvokePromptAsync(
-            promptTemplate: promptTemplate,
+            promptTemplate: """
+                            Please use this information to answer the question:
+                            {{#with (SearchPlugin-GetTextSearchResults question)}}
+                              {{#each this}}
+                                Name: {{Name}}
+                                Value: {{Value}}
+                                Source: {{Link}}
+                                -----------------
+                              {{/each}}
+                            {{/with}}
+
+                            Include the source of relevant information in the response.
+
+                            Question: {{question}}
+                            """,
             arguments: new KernelArguments
             {
                 { "question", "Please show me all hotels that have a rooftop bar." },
-                { "searchResults", searchResultsStr }
             },
             templateFormat: "handlebars",
             promptTemplateFactory: new HandlebarsPromptTemplateFactory());
@@ -138,7 +134,7 @@ public class SemanticService
         // > Urban Chic Hotel has a rooftop bar with stunning views (Source: https://example.com/stu654).
     }
 
-    private async Task GetAnswer()
+    private async Task GetAnswer3()
     {
         var question = "rooftop";
         //var question = "Please show me all hotels that have a rooftop bar.";
@@ -153,12 +149,6 @@ public class SemanticService
         if (resultsArray == null || resultsArray.Length == 0)
         {
             Console.WriteLine("No results found.");
-            return;
-        }
-
-        if (resultsArray == null || resultsArray.Length == 0)
-        {
-            Console.WriteLine($"Sorry, I couldn't find any answer for $`{question}`");
             return;
         }
 

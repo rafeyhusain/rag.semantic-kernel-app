@@ -1,59 +1,43 @@
 ﻿
-//using Microsoft.Extensions.Configuration;
-//using Microsoft.Extensions.Logging;
-//using Serilog;
+using System;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-//namespace Rag.SemanticKernel.Core.Sdk.Util;
+namespace Rag.SemanticKernel.Core.Sdk.Util;
 
-//public class Logger
-//{
-//    public string LogFileName { get; private set; }
+public static class Logger
+{
+    public static void LogInformation2(this ILogger logger, string message)
+    {
+        logger.LogInformation(message);
+    }
 
-//    public Logger(IConfiguration configuration)
-//    {
-//        LogFileName = configuration["Log:FileName"]!;
+    public static void LogCritical2(this ILogger logger, Exception ex, string message)
+    {
+        string fullMessage = message + Environment.NewLine + GetExceptionMessages(ex);
 
-//        Log.Logger = new LoggerConfiguration()
-//        .WriteTo.Console()
-//        .WriteTo.File(LogFileName)
-//        .CreateLogger();
-//    }
+        logger.LogError(fullMessage);
+    }
 
-//    public void Close()
-//    {
-//        Log.CloseAndFlush();
-//    }
+    private static string GetExceptionMessages(Exception ex)
+    {
+        List<string> messages = [];
+        string stackTrace = "";
 
-//    public void Info(string message)
-//    {
-//        Log.Information(message);
-//    }
+        if (ex != null)
+        {
+            stackTrace = ex.StackTrace + Environment.NewLine;
+        }
 
-//    public void Error(string message, Exception? ex)
-//    {
-//        string fullMessage = message + Environment.NewLine + GetExceptionMessages(ex);
+        while (ex != null)
+        {
+            messages.Add(ex.Message + Environment.NewLine);
+            ex = ex.InnerException;
+        }
 
-//        Log.Error(fullMessage);
-//    }
+        messages.Add(stackTrace);
 
-//    private string GetExceptionMessages(Exception? ex)
-//    {
-//        List<string> messages = [];
-//        string stackTrace = "";
-
-//        if (ex != null)
-//        {
-//            stackTrace = ex.StackTrace + Environment.NewLine;
-//        }
-
-//        while (ex != null)
-//        {
-//            messages.Add(ex.Message + Environment.NewLine);
-//            ex = ex.InnerException;
-//        }
-
-//        messages.Add(stackTrace);
-
-//        return string.Join(Environment.NewLine, messages);
-//    }
-//}
+        return string.Join(Environment.NewLine, messages);
+    }
+}

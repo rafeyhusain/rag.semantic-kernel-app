@@ -18,7 +18,7 @@ public sealed record Hotel
     public required string Description { get; set; }
 
     [VectorStoreRecordVector(Dimensions: 1024, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
-    public ReadOnlyMemory<float>? DescriptionEmbedding { get; set; }
+    public ReadOnlyMemory<float>? Embeddings { get; set; }
 
     [TextSearchResultLink]
     [VectorStoreRecordData]

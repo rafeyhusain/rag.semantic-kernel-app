@@ -14,8 +14,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.Core", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.SemanticKernel.Connectors.Elasticsearch", "semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj", "{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Elastic.SemanticKernel.Playground", "semantic-kernel-net\Elastic.SemanticKernel.Playground\Elastic.SemanticKernel.Playground.csproj", "{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.App", "Rag.SemanticKernel.App\Rag.SemanticKernel.App.csproj", "{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}"
 EndProject
 Global
@@ -36,10 +34,6 @@ Global
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAF7DD3B-F311-2451-9A3B-9F2982E8FA3E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5772D773-7B8D-A9E4-C125-AA728EEDDC8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A1DE3A6-809A-CC8E-4A17-98DFBD3D9A4D}.Release|Any CPU.ActiveCfg = Release|Any CPU

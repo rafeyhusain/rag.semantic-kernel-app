@@ -344,6 +344,8 @@ public sealed class ElasticsearchVectorStoreRecordCollection<TRecord> :
             knnQuery.Filter = filterQueries;
         }
 
+        knnQuery.NumCandidates = 100;
+
         // Execute search query.
 
         var result = await RunOperationAsync(

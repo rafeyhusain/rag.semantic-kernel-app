@@ -53,9 +53,8 @@ public static class SemanticServiceExtensions
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>(elasticIndex, elasticsearchClientSettings);
     }
 
-    public static void AddSemanticService(this IHost host)
+    public static void AddSemanticService(this IHost host, Kernel kernel)
     {
-        var kernel = host.Services.GetService<Kernel>()!;
         var textSearch = host.Services.GetService<VectorStoreTextSearch<Hotel>>()!;
         kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
     }

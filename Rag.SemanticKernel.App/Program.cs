@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.SemanticKernel;
 using Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 using Serilog;
 
@@ -58,11 +59,12 @@ internal sealed class Program
 
         var host = builder.Build();
 
-        // Register search plugin.
-        host.AddSemanticService();
+        var kernel = host.Services.GetService<Kernel>()!;
+
+        host.AddSemanticService(kernel);
 
         var embeddingService = host.Services.GetRequiredService<SemanticService>();
-        await embeddingService.Ask(args);
+        await embeddingService.Ask(kernel);
 
         Log.Information("Application completed successfully");
 

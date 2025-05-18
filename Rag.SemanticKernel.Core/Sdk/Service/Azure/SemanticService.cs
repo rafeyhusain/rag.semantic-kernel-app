@@ -19,10 +19,10 @@ public class SemanticService
     private readonly IConfiguration _configuration;
     private readonly ILogger<SemanticService> _logger;
     private readonly ITextEmbeddingGenerationService _embeddingService;
-    private readonly IVectorStoreRecordCollection<string, Hotel> _vectorStoreCollection;
+    private readonly IVectorStoreRecordCollection<string, Markdown> _vectorStoreCollection;
     private readonly Kernel _kernel;
 
-    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection, Kernel kernel)
+    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Markdown> vectorStoreCollection, Kernel kernel)
     {
         try
         {
@@ -46,24 +46,24 @@ public class SemanticService
         // Crate collection and ingest a few demo records.
         await _vectorStoreCollection.CreateCollectionIfNotExistsAsync();
 
-        // CSV format: ID;Hotel Name;Description;Reference Link
-        var hotels = (await File.ReadAllLinesAsync("hotels.csv"))
+        // CSV format: ID;Markdown Name;Description;Reference Link
+        var Markdowns = (await File.ReadAllLinesAsync("Markdowns.csv"))
             .Select(x => x.Split(';'));
 
-        foreach (var chunk in hotels.Chunk(25))
+        foreach (var chunk in Markdowns.Chunk(25))
         {
             var descriptionEmbeddings = await _embeddingService.GenerateEmbeddingsAsync(chunk.Select(x => x[2]).ToArray());
 
             for (var i = 0; i < chunk.Length; ++i)
             {
-                var hotel = chunk[i];
-                await _vectorStoreCollection.UpsertAsync(new Hotel
+                var Markdown = chunk[i];
+                await _vectorStoreCollection.UpsertAsync(new Markdown
                 {
-                    HotelId = hotel[0],
-                    HotelName = hotel[1],
-                    Description = hotel[2],
+                    MarkdownId = Markdown[0],
+                    MarkdownName = Markdown[1],
+                    Description = Markdown[2],
                     DescriptionEmbedding = descriptionEmbeddings[i],
-                    ReferenceLink = hotel[3]
+                    ReferenceLink = Markdown[3]
                 });
             }
         }
@@ -89,13 +89,13 @@ public class SemanticService
                             """,
             arguments: new KernelArguments
             {
-                { "question", "Please show me all hotels that have a rooftop bar." },
+                { "question", "Please show me all Markdowns that have a rooftop bar." },
             },
             templateFormat: "handlebars",
             promptTemplateFactory: new HandlebarsPromptTemplateFactory());
 
         Console.WriteLine(response.ToString());
 
-        // > Urban Chic Hotel has a rooftop bar with stunning views (Source: https://example.com/stu654).
+        // > Urban Chic Markdown has a rooftop bar with stunning views (Source: https://example.com/stu654).
     }
 }

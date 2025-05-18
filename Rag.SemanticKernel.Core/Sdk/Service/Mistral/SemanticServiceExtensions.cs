@@ -40,17 +40,17 @@ public static class SemanticServiceExtensions
             apiKey
             );
 
-        kernelBuilder.AddVectorStoreTextSearch<Hotel>();
+        kernelBuilder.AddVectorStoreTextSearch<Markdown>();
 
         var elasticUrl = configuration["Elasticsearch:Url"];
         var elasticUser = configuration["Elasticsearch:User"];
         var elasticPassword = configuration["Elasticsearch:Password"];
-        var elasticIndex = configuration["Elasticsearch:Index"] ?? "skhotels";
+        var elasticIndex = configuration["Elasticsearch:Index"] ?? "skMarkdowns";
 
         var elasticsearchClientSettings = new ElasticsearchClientSettings(new Uri(elasticUrl))
             .Authentication(new BasicAuthentication(elasticUser, elasticPassword));
 
-        kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>(elasticIndex, elasticsearchClientSettings);
+        kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Markdown>(elasticIndex, elasticsearchClientSettings);
 
         services.AddSingleton<QuestionService>();
         services.AddSingleton<EmbeddingGeneratorService>();
@@ -58,7 +58,7 @@ public static class SemanticServiceExtensions
 
     public static void AddSemanticService(this IHost host, Kernel kernel)
     {
-        var textSearch = host.Services.GetService<VectorStoreTextSearch<Hotel>>()!;
+        var textSearch = host.Services.GetService<VectorStoreTextSearch<Markdown>>()!;
         kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
     }
 

@@ -16,7 +16,7 @@ internal sealed class Program
 
             await app.Init(args);
 
-            //await app.GenerateEmbeddings();
+            await app.GenerateEmbeddings();
 
             var answer = await app.Ask("Please show me all hotels that have a rooftop pool.");
 

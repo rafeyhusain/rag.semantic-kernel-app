@@ -2,6 +2,7 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
+using Rag.SemanticKernel.Core.Sdk.Parser;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,12 +17,12 @@ public class EmbeddingGeneratorService
 {
     private readonly ILogger<EmbeddingService> _logger;
     private readonly ITextEmbeddingGenerationService _embeddingService;
-    private readonly IVectorStoreRecordCollection<string, Hotel> _vectorStoreCollection;
+    private readonly IVectorStoreRecordCollection<string, Markdown> _vectorStoreCollection;
 
     public EmbeddingGeneratorService(
         ILogger<EmbeddingService> logger,
         ITextEmbeddingGenerationService embeddingService,
-        IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection)
+        IVectorStoreRecordCollection<string, Markdown> vectorStoreCollection)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _embeddingService = embeddingService ?? throw new ArgumentNullException(nameof(embeddingService));
@@ -70,30 +71,40 @@ public class EmbeddingGeneratorService
         _logger.LogInformation("Generating embeddings for {File}", filePath);
 
         await _vectorStoreCollection.CreateCollectionIfNotExistsAsync();
-        var hotelsRaw = await File.ReadAllLinesAsync(filePath);
 
-        var hotels = hotelsRaw
-            .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(line => line.Split(';'))
-            .Where(parts => parts.Length >= 4)
-            .ToList();
+        var file = new MarkdownFile();
 
-        foreach (var chunk in hotels.Chunk(25))
+        file.Parse(filePath);
+
+        foreach (var chunk in file.Headings.Chunk(25))
         {
-            var descriptions = chunk.Select(x => x[2]).ToArray();
-            var embeddings = await GenerateWithRetry(descriptions);
+            var contents = chunk.Select(x => x.Content).ToArray();
 
-            for (int i = 0; i < chunk.Length && i < embeddings.Count; i++)
+            var embeddings = await GenerateWithRetry(contents);
+
+            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
             {
-                var hotel = chunk[i];
-                await _vectorStoreCollection.UpsertAsync(new Hotel
+                var heading = chunk[i];
+
+                await _vectorStoreCollection.UpsertAsync(new Markdown
                 {
-                    HotelId = hotel[0],
-                    HotelName = hotel[1],
-                    Description = hotel[2],
-                    Embeddings = embeddings[i],
-                    Link = hotel[3]
+                    Id = "test-id",
+                    FileName = "test.md",
+                    Url = "test/path",
+                    Heading = "Test Heading",
+                    Content = "This is test content",
+                    Embeddings = embeddings[i]
                 });
+
+                //await _vectorStoreCollection.UpsertAsync(new Markdown
+                //{
+                //    Id = Guid.NewGuid().ToString(),
+                //    FileName = file.FileName,
+                //    Url = file.FilePath,
+                //    Heading = heading.Text,
+                //    Content = heading.Content,
+                //    Embeddings = embeddings[i]
+                //});
             }
         }
     }

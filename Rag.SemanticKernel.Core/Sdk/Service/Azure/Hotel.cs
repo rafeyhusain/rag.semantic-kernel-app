@@ -4,14 +4,14 @@ using Microsoft.SemanticKernel.Data;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Azure;
 
-public sealed record Hotel
+public sealed record Markdown
 {
     [VectorStoreRecordKey]
-    public required string HotelId { get; set; }
+    public required string MarkdownId { get; set; }
 
     [TextSearchResultName]
     [VectorStoreRecordData(IsFilterable = true)]
-    public required string HotelName { get; set; }
+    public required string MarkdownName { get; set; }
 
     [TextSearchResultValue]
     [VectorStoreRecordData(IsFullTextSearchable = true)]

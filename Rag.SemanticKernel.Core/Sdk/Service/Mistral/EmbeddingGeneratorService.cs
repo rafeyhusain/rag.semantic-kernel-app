@@ -66,6 +66,41 @@ public class EmbeddingGeneratorService
         }
     }
 
+    private async Task GenerateEmbeddings1(string filePath)
+    {
+        // Crate collection and ingest a few demo records.
+        await _vectorStoreCollection.CreateCollectionIfNotExistsAsync();
+
+        var hotelsRaw = await File.ReadAllLinesAsync(filePath);
+
+        var hotels = hotelsRaw
+            .Where(line => !string.IsNullOrWhiteSpace(line))
+            .Select(line => line.Split(';'))
+            .Where(parts => parts.Length >= 4) // ID;HotelName;Description;Link
+            .ToList();
+
+        foreach (var chunk in hotels.Chunk(25))
+        {
+            var descriptions = chunk.Select(x => x[2]).ToArray();
+
+            var embeddings = await GenerateWithRetry(descriptions);
+
+            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
+            {
+                //var hotel = chunk[i];
+                //await _vectorStoreCollection.UpsertAsync(new Markdown
+                //{
+                //    HotelId = hotel[0],
+                //    HotelName = hotel[1],
+                //    Description = hotel[2],
+                //    Embeddings = embeddings[i],
+                //    Link = hotel[3]
+                //});
+            }
+        }
+    }
+
+
     private async Task GenerateEmbeddings(string filePath)
     {
         _logger.LogInformation("Generating embeddings for {File}", filePath);
@@ -76,35 +111,26 @@ public class EmbeddingGeneratorService
 
         file.Parse(filePath);
 
-        foreach (var chunk in file.Headings.Chunk(25))
+        foreach (var headingChunk in file.Headings.Chunk(25))
         {
-            var contents = chunk.Select(x => x.Content).ToArray();
-
+            var contents = headingChunk.Select(h => h.Content).ToArray();
             var embeddings = await GenerateWithRetry(contents);
 
-            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
+            _logger.LogInformation($"Requested {contents.Length} embeddings, received {embeddings.Count}");
+
+            for (int i = 0; i < headingChunk.Length && i < embeddings.Count; i++)
             {
-                var heading = chunk[i];
+                var heading = headingChunk[i];
 
                 await _vectorStoreCollection.UpsertAsync(new Markdown
                 {
-                    Id = "test-id",
-                    FileName = "test.md",
-                    Url = "test/path",
-                    Heading = "Test Heading",
-                    Content = "This is test content",
+                    MarkdownId = Guid.NewGuid().ToString(),
+                    FileName = file.FileName,
+                    Url = file.FilePath,
+                    Heading = heading.Text,
+                    Content = heading.Content,
                     Embeddings = embeddings[i]
                 });
-
-                //await _vectorStoreCollection.UpsertAsync(new Markdown
-                //{
-                //    Id = Guid.NewGuid().ToString(),
-                //    FileName = file.FileName,
-                //    Url = file.FilePath,
-                //    Heading = heading.Text,
-                //    Content = heading.Content,
-                //    Embeddings = embeddings[i]
-                //});
             }
         }
     }

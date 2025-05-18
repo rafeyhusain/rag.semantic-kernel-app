@@ -4,30 +4,29 @@ using Microsoft.SemanticKernel.Data;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 
-
 /// <summary>
 /// Class that represents a Markdown document with vector embeddings
 /// </summary>
 public sealed record Markdown
 {
     [VectorStoreRecordKey]
-    public string Id { get; set; }
+    public required string MarkdownId { get; set; }
 
     [TextSearchResultName]
     [VectorStoreRecordData(IsFilterable = true)]
-    public string Heading { get; set; }
+    public required string FileName { get; set; }
 
     [TextSearchResultValue]
     [VectorStoreRecordData(IsFullTextSearchable = true)]
-    public string Content { get; set; }
+    public required string Content { get; set; }
+
+    [VectorStoreRecordVector(Dimensions: 1024, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
+    public ReadOnlyMemory<float>? Embeddings { get; set; }
 
     [TextSearchResultLink]
-    [VectorStoreRecordData(IsFilterable = true)]
-    public string FileName { get; set; }
-
     [VectorStoreRecordData]
-    public string Url { get; set; }
+    public string Heading { get; set; }
 
-    [VectorStoreRecordVector(Dimensions: 1536, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
-    public ReadOnlyMemory<float>? Embeddings { get; set; }
+    [VectorStoreRecordData(IsFilterable = true)]
+    public string Url { get; set; }
 }

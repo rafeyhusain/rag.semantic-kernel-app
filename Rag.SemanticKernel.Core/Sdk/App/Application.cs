@@ -51,8 +51,6 @@ public class Application
         _semanticService = host.Services.GetService<SemanticService>();
 
         await Task.CompletedTask;
-
-        Log.Information("Application finished successfully");
     }
 
     public void ClearLog()
@@ -65,7 +63,6 @@ public class Application
         if (File.Exists(logFilePath))
         {
             File.WriteAllText(logFilePath, string.Empty);
-            Console.WriteLine($"Cleared log file: {logFilePath}");
         }
         else
         {

@@ -13,4 +13,9 @@ public class MarkdownHeading
         Type = type;
         LineNumber = lineNumber;
     }
+
+    public override string ToString()
+    {
+        return $"Text: {Text}, Type: {Type}, LineNumber: {LineNumber}, Content: {Content}";
+    }
 }

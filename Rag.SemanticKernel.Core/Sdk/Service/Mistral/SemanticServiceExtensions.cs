@@ -1,5 +1,4 @@
-﻿using System;
-using Elastic.Clients.Elasticsearch;
+﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,8 +8,8 @@ using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.TextGeneration;
+using System;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 #pragma warning disable SKEXP0010 // Some SK methods are still experimental
@@ -45,7 +44,7 @@ public static class SemanticServiceExtensions
         var elasticUrl = configuration["Elasticsearch:Url"];
         var elasticUser = configuration["Elasticsearch:User"];
         var elasticPassword = configuration["Elasticsearch:Password"];
-        var elasticIndex = configuration["Elasticsearch:Index"] ?? "skMarkdowns";
+        var elasticIndex = configuration["Elasticsearch:Index"] ?? "markdown";
 
         var elasticsearchClientSettings = new ElasticsearchClientSettings(new Uri(elasticUrl))
             .Authentication(new BasicAuthentication(elasticUser, elasticPassword));

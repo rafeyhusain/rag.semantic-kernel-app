@@ -1,5 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Embeddings;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -7,9 +11,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 
@@ -59,14 +60,12 @@ public class EmbeddingService : ITextEmbeddingGenerationService
     {
         try
         {
-            string text = data[0];
-
-            _logger.LogDebug("Generating embeddings for text: {TextPreview}", text.Length > 50 ? $"{text.Substring(0, 50)}..." : text);
+            _logger.LogDebug("Generating embeddings for {Count} items", data.Count);
 
             var requestBody = JsonSerializer.Serialize(new
             {
                 model = _embeddingModel,
-                input = text
+                input = data  // Send full list
             });
 
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
@@ -88,8 +87,11 @@ public class EmbeddingService : ITextEmbeddingGenerationService
                 throw new InvalidOperationException("No embeddings returned from Mistral API");
             }
 
-            _logger.LogDebug("Successfully generated embeddings with {Dimensions} dimensions", embeddingResponse.Data[0].Embedding.Length);
-            return [new ReadOnlyMemory<float>(embeddingResponse.Data[0].Embedding)];
+            _logger.LogDebug("Successfully generated {Count} embeddings", embeddingResponse.Data.Count);
+
+            return embeddingResponse.Data
+                .Select(d => new ReadOnlyMemory<float>(d.Embedding))
+                .ToList();
         }
         catch (Exception ex)
         {
@@ -97,4 +99,5 @@ public class EmbeddingService : ITextEmbeddingGenerationService
             throw;
         }
     }
+
 }

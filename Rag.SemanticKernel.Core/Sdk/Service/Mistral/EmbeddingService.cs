@@ -18,13 +18,13 @@ namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 /// </summary>
 public class EmbeddingService : ITextEmbeddingGenerationService
 {
-    private readonly ILogger<SemanticService> _logger;
+    private readonly ILogger<EmbeddingService> _logger;
     private readonly string _endpoint;
     private readonly string _apiKey;
     private readonly string _embeddingModel;
     private readonly HttpClient _httpClient;
 
-    public EmbeddingService(ILogger<SemanticService> logger, string endpoint, string apiKey, string embeddingModel)
+    public EmbeddingService(ILogger<EmbeddingService> logger, string endpoint, string apiKey, string embeddingModel)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 

@@ -16,6 +16,9 @@ internal class Markdown
     [VectorStoreRecordData(IsFilterable = true)]
     public string FileName { get; set; }
 
+    [VectorStoreRecordData(IsFilterable = true)]
+    public string Url { get; set; }
+
     [TextSearchResultName]
     [VectorStoreRecordData(IsFilterable = true)]
     public string Heading { get; set; }
@@ -25,5 +28,5 @@ internal class Markdown
     public string Content { get; set; }
 
     [VectorStoreRecordVector(Dimensions: 1536, DistanceFunction.CosineSimilarity, IndexKind.Hnsw)]
-    public ReadOnlyMemory<float>? ContentEmbedding { get; set; }
+    public ReadOnlyMemory<float>? Embeddings { get; set; }
 }

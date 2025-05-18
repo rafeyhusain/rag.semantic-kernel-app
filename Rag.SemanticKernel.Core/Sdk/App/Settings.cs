@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Microsoft.Extensions.Configuration;
 
-namespace Rag.SemanticKernel.Core.Sdk.Util;
+namespace Rag.SemanticKernel.Core.Sdk.App;
 
 public class Settings
 {

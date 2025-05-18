@@ -28,14 +28,14 @@ public static class SemanticServiceExtensions
         var completionModel = configuration["Mistral:CompletionModel"];
         var embeddingModel = configuration["Mistral:EmbeddingModel"];
 
-        kernelBuilder.AddMistralChatCompletion(
-            completionModel,
+        kernelBuilder.AddMistralTextEmbeddingGeneration(
+            embeddingModel,
             endpoint,
             apiKey
             );
 
-        kernelBuilder.AddMistralTextEmbeddingGeneration(
-            embeddingModel,
+        kernelBuilder.AddMistralChatCompletion(
+            completionModel,
             endpoint,
             apiKey
             );
@@ -51,6 +51,9 @@ public static class SemanticServiceExtensions
             .Authentication(new BasicAuthentication(elasticUser, elasticPassword));
 
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, Hotel>(elasticIndex, elasticsearchClientSettings);
+
+        services.AddSingleton<QuestionService>();
+        services.AddSingleton<EmbeddingGeneratorService>();
     }
 
     public static void AddSemanticService(this IHost host, Kernel kernel)
@@ -67,7 +70,7 @@ public static class SemanticServiceExtensions
     {
         builder.Services.AddKeyedSingleton<ITextEmbeddingGenerationService>(embeddingModel, (sp, _) =>
             new EmbeddingService(
-                sp.GetService<ILogger<SemanticService>>(),
+                sp.GetService<ILogger<EmbeddingService>>(),
                 endpoint,
                 apiKey,
                 embeddingModel
@@ -76,7 +79,7 @@ public static class SemanticServiceExtensions
         // Register default embedding service (non-keyed) for VectorStoreTextSearch<T>
         builder.Services.AddSingleton<ITextEmbeddingGenerationService>(sp =>
             new EmbeddingService(
-                sp.GetService<ILogger<SemanticService>>(),
+                sp.GetService<ILogger<EmbeddingService>>(),
                 endpoint,
                 apiKey,
                 embeddingModel
@@ -94,7 +97,7 @@ public static class SemanticServiceExtensions
         Func<IServiceProvider, object, ChatCompletionService> factory = (serviceProvider, _) =>
         {
             return new ChatCompletionService(
-                serviceProvider.GetService<ILogger<SemanticService>>(),
+                serviceProvider.GetService<ILogger<ChatCompletionService>>(),
                 endpoint,
                 apiKey,
                 completionModel
@@ -107,7 +110,7 @@ public static class SemanticServiceExtensions
         // Register default (non-keyed) ITextGenerationService
         builder.Services.AddSingleton<ITextGenerationService>(sp =>
             new ChatCompletionService(
-                sp.GetService<ILogger<SemanticService>>(),
+                sp.GetService<ILogger<ChatCompletionService>>(),
                 endpoint,
                 apiKey,
                 completionModel

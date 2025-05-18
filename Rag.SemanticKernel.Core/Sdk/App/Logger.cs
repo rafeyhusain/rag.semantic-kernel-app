@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace Rag.SemanticKernel.Core.Sdk.Util;
+namespace Rag.SemanticKernel.Core.Sdk.App;
 
 public static class Logger
 {
@@ -15,12 +15,12 @@ public static class Logger
 
     public static void LogCritical2(this ILogger logger, Exception ex, string message)
     {
-        string fullMessage = message + Environment.NewLine + GetExceptionMessages(ex);
+        var fullMessage = GetMessage(ex, message);
 
         logger.LogError(fullMessage);
     }
 
-    private static string GetExceptionMessages(Exception ex)
+    public static string GetMessage(Exception ex, string message = null)
     {
         List<string> messages = [];
         string stackTrace = "";
@@ -38,6 +38,8 @@ public static class Logger
 
         messages.Add(stackTrace);
 
-        return string.Join(Environment.NewLine, messages);
+        var fullMessage = message + Environment.NewLine + string.Join(Environment.NewLine, messages);
+
+        return fullMessage;
     }
 }

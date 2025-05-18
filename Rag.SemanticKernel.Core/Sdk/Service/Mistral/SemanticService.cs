@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.VectorData;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+using Rag.SemanticKernel.Core.Sdk.App;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Data;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
-using Rag.SemanticKernel.Core.Sdk.Util;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
 #pragma warning disable SKEXP0010 // Some SK methods are still experimental
@@ -21,190 +18,24 @@ namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 
 public class SemanticService
 {
-    private readonly IConfiguration _configuration;
-    private readonly ILogger<SemanticService> _logger;
-    private readonly ITextEmbeddingGenerationService _embeddingService;
-    private readonly IVectorStoreRecordCollection<string, Hotel> _vectorStoreCollection;
-    private Kernel _kernel;
+    private readonly QuestionService _questionService;
+    private readonly EmbeddingGeneratorService _embeddingGenerator;
 
-    private readonly HttpClient _httpClient;
-    private readonly string _apiKey;
-    private readonly string _embeddingModel;
-    private readonly string _elasticsearchUrl;
-    private readonly string _elasticsearchIndexName;
-
-    public SemanticService(IConfiguration configuration, ILogger<SemanticService> logger, ITextEmbeddingGenerationService embeddingService, IVectorStoreRecordCollection<string, Hotel> vectorStoreCollection)
+    public SemanticService(QuestionService questionService, EmbeddingGeneratorService embeddingGenerator)
     {
-        try
-        {
-            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _embeddingService = embeddingService ?? throw new ArgumentNullException(nameof(embeddingService));
-            _vectorStoreCollection = vectorStoreCollection ?? throw new ArgumentNullException(nameof(vectorStoreCollection));
-
-            _logger.LogInformation("SemanticService initialized successfully");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error initializing SemanticService");
-            throw;
-        }
+        _questionService = questionService;
+        _embeddingGenerator = embeddingGenerator;
     }
 
-    public async Task Ask(Kernel kernel)
-    {
-        _kernel = kernel ?? throw new ArgumentNullException(nameof(kernel));
+    public Task<string> Ask(Kernel kernel, string question) 
+        => Ask(kernel, question, new QuestionServiceOptions());
 
-        try
-        {
-            await CreateEmbeddings("hotels.csv");
-            await GetAnswer();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogCritical2(ex, "Error in SemanticService.Ask");
-            throw;
-        }
-    }
+    public Task<string> Ask(Kernel kernel, string question, QuestionServiceOptions options)
+    => _questionService.Ask(kernel, question, options);
 
-    private async Task CreateEmbeddings(string filePath)
-    {
-        // Crate collection and ingest a few demo records.
-        await _vectorStoreCollection.CreateCollectionIfNotExistsAsync();
+    public Task GenerateEmbeddings(Kernel kernel)
+        => GenerateEmbeddings(kernel, new EmbeddingGeneratorServiceOptions());
 
-        var hotelsRaw = await File.ReadAllLinesAsync(filePath);
-
-        var hotels = hotelsRaw
-            .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(line => line.Split(';'))
-            .Where(parts => parts.Length >= 4) // ID;HotelName;Description;Link
-            .ToList();
-
-        foreach (var chunk in hotels.Chunk(25))
-        {
-            var descriptions = chunk.Select(x => x[2]).ToArray();
-
-            var embeddings = await GenerateWithRetry(descriptions);
-
-            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
-            {
-                var hotel = chunk[i];
-                await _vectorStoreCollection.UpsertAsync(new Hotel
-                {
-                    HotelId = hotel[0],
-                    HotelName = hotel[1],
-                    Description = hotel[2],
-                    Embeddings = embeddings[i],
-                    Link = hotel[3]
-                });
-            }
-        }
-    }
-
-    private async Task GetAnswer()
-    {
-        // Invoke the LLM with a template that uses the search plugin to
-        // 1. get related information to the user query from the vector store
-        // 2. add the information to the LLM prompt.
-        var response = await _kernel.InvokePromptAsync(
-            promptTemplate: """
-                            Please use this information to answer the question:
-                            {{#with (SearchPlugin-GetTextSearchResults question)}}
-                              {{#each this}}
-                                Name: {{Name}}
-                                Value: {{Value}}
-                                Source: {{Link}}
-                                -----------------
-                              {{/each}}
-                            {{/with}}
-
-                            Include the source of relevant information in the response.
-
-                            Question: {{question}}
-                            """,
-            arguments: new KernelArguments
-            {
-                { "question", "Please show me all hotels that have a rooftop bar." },
-            },
-            templateFormat: "handlebars",
-            promptTemplateFactory: new HandlebarsPromptTemplateFactory());
-
-        Console.WriteLine(response.ToString());
-
-        // > Urban Chic Hotel has a rooftop bar with stunning views (Source: https://example.com/stu654).
-    }
-
-    private async Task GetAnswer3()
-    {
-        var question = "rooftop";
-        //var question = "Please show me all hotels that have a rooftop bar.";
-
-        // Invoke the search function
-        var searchResults = await _kernel.InvokeAsync("SearchPlugin", "GetTextSearchResults",
-            new KernelArguments { { "input", question } });
-
-        // Extract the array of results
-        var resultsArray = searchResults.GetValue<Microsoft.SemanticKernel.Data.TextSearchResult[]>();
-
-        if (resultsArray == null || resultsArray.Length == 0)
-        {
-            Console.WriteLine("No results found.");
-            return;
-        }
-
-        // Convert the array to a string for the prompt
-        var searchResultsStr = string.Join("\n\n", resultsArray.Select(result =>
-            $"Title: {result.Name}\n" +
-            $"Excerpt: {result.Value}\n" +
-            $"Source: {result.Link}"));
-
-        // Optional: log the formatted results
-        Console.WriteLine("--- Search Results for Prompt ---");
-        Console.WriteLine(searchResultsStr);
-
-        // Prompt template
-        var promptTemplate = """
-        Please use this information to answer the question:
-        {{searchResults}}
-
-        Include the source of relevant information in the response.
-
-        Question: {{question}}
-        """;
-
-        // Use the formatted string as input
-        var response = await _kernel.InvokePromptAsync(
-            promptTemplate: promptTemplate,
-            arguments: new KernelArguments
-            {
-            { "question", question},
-            { "searchResults", searchResultsStr }
-            },
-            templateFormat: "handlebars",
-            promptTemplateFactory: new HandlebarsPromptTemplateFactory());
-
-        Console.WriteLine("--- Final Answer ---");
-        Console.WriteLine(response.ToString());
-    }
-
-    private async Task<IList<ReadOnlyMemory<float>>> GenerateWithRetry(string[] texts, int maxRetries = 5)
-    {
-        int delay = 1000; // Start with 1 second
-        for (int attempt = 0; attempt < maxRetries; attempt++)
-        {
-            try
-            {
-                return await _embeddingService.GenerateEmbeddingsAsync(texts);
-            }
-            catch (HttpRequestException ex) when (ex.Message.Contains("TooManyRequests"))
-            {
-                Console.WriteLine($"Rate limit hit. Retrying in {delay}ms... (attempt {attempt + 1}/{maxRetries})");
-                await Task.Delay(delay);
-                delay *= 2; // Exponential backoff
-            }
-        }
-
-        throw new Exception("Failed to generate embeddings after several retries.");
-    }
+    public Task GenerateEmbeddings(Kernel kernel, EmbeddingGeneratorServiceOptions options)
+        => _embeddingGenerator.Generate(kernel, options);
 }
-

@@ -19,13 +19,13 @@ namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 /// </summary>
 public class ChatCompletionService : IChatCompletionService, ITextGenerationService
 {
-    private readonly ILogger<SemanticService> _logger;
+    private readonly ILogger<ChatCompletionService> _logger;
     private readonly string _endpoint;
     private readonly string _apiKey;
     private readonly string _completionModel;
     private readonly HttpClient _httpClient;
 
-    public ChatCompletionService(ILogger<SemanticService> logger, string endpoint, string apiKey, string completionModel)
+    public ChatCompletionService(ILogger<ChatCompletionService> logger, string endpoint, string apiKey, string completionModel)
     {
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
 

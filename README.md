@@ -16,30 +16,18 @@ Here are the details of Dotnet application in C# with Semantic Memory framework 
 ## Setup Guide
 
 - Install [ElasticSearch](./ElasticSearch/README.md)
-- Build and Run [Semantic Search Console App](./Rag.SemanticKernel.App/Program.cs)
 
-## Notes
+## Generate Embeddings
 
-`Elastic.SemanticKernel.Connectors.Elasticsearch` pre-release is not sending `num_candidates` when it builds `search` query. [This](https://github.com/marcarl/rag-elastic/blob/d1bfcf5537d3542166b09039f6b2aae5b962357f/semantic-kernel-net/Elastic.SemanticKernel.Connectors.Elasticsearch/ElasticsearchVectorStoreRecordCollection.cs#L347) line sends it.
+- See [Generate Embeddings](./Rag.SemanticKernel.App/README.md)
 
-```csharp
-knnQuery.NumCandidates = 100;
-```
+## Run Web API
 
-In Elasticsearch, when doing vector search using the knn query with HNSW indexing, you must provide `num_candidates`. It is number of candidates to consider during the approximate search.
+- See [Run Web API](./Rag.SemanticKernel.WebApi/README.md)
 
+## Semantic Kernel Notes
 
-```bash
-curl -X POST "http://localhost:9200/hotels/_search" -H "Content-Type: application/json" -d '
-{
-  "knn": {
-    "field": "embeddings",
-    "query_vector": [-0.0268249512, 0.123, ...], 
-    "k": 5,
-    "num_candidates": 100
-  }
-}'
-```
+See pre-release fix notes at [semantic-kernel-net notes](./semantic-kernel-net/NOTES.md)
 
 ## Folders
 

@@ -18,9 +18,9 @@ internal sealed class Program
 
             await app.GenerateEmbeddings();
 
-            var answer = await app.Ask("det sanna värdet");
+            //var answer = await app.Ask("det sanna värdet");
 
-            Console.WriteLine($"{answer}");
+            //Console.WriteLine($"{answer}");
 
             Console.ReadKey();
         }

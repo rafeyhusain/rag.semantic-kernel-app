@@ -1,14 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.VectorData;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
-using Rag.SemanticKernel.Core.Sdk.App;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
+﻿using Microsoft.SemanticKernel;
+using Rag.SemanticKernel.Core.Sdk.Model;
+using Rag.SemanticKernel.Core.Sdk.Service.Azure;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
@@ -27,7 +20,21 @@ public class SemanticService
         _embeddingGenerator = embeddingGenerator;
     }
 
-    public Task<string> Ask(Kernel kernel, string question) 
+    public async Task<AnswerModel> AskModel(Kernel kernel, string question)
+    {
+        var answerText = await Ask(kernel, question);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        AnswerModel answer = JsonSerializer.Deserialize<AnswerModel>(answerText, options);
+
+        return answer;
+    }
+
+    public Task<string> Ask(Kernel kernel, string question)
         => Ask(kernel, question, new QuestionServiceOptions());
 
     public Task<string> Ask(Kernel kernel, string question, QuestionServiceOptions options)

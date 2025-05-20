@@ -1,6 +1,6 @@
-using Rag.SemanticKernel.Core.Sdk.App;
 using System;
 using System.Threading.Tasks;
+using Rag.SemanticKernel.Logger.Extensions;
 
 namespace Rag.SemanticKernel.App;
 
@@ -22,7 +22,7 @@ internal sealed class Program
         }
         catch (Exception ex)
         {
-            Console.WriteLine(Logger.GetMessage(ex, "Application terminated unexpectedly"));
+            Console.WriteLine(Log.GetMessage(ex, "Application terminated unexpectedly"));
         }
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Rag.SemanticKernel.Startup.ConsoleApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+97f710ed98ccd9e7c947fc9917e636b80e282d74")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dd38f99ce1dec8671f593ed2f0e464c4f2e3a457")]
 [assembly: System.Reflection.AssemblyProductAttribute("Rag.SemanticKernel.Startup.ConsoleApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Rag.SemanticKernel.Startup.ConsoleApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9</TargetFramework>
+		<IsPublishable>true</IsPublishable>
+		<IsPackable>false</IsPackable>
+		<NoWarn>SKEXP0001, SKEXP0020</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Api\Question\**" />
+	  <EmbeddedResource Remove="Api\Question\**" />
+	  <None Remove="Api\Question\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.2" />
+		<PackageReference Include="Microsoft.Build.CopyOnWrite" Version="1.0.334">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
+		<PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.30.0" />
+	</ItemGroup>
+
+</Project>

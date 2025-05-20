@@ -1,9 +1,3 @@
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.csproj.AssemblyReference.cache
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.AssemblyInfoInputs.cache
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.AssemblyInfo.cs
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.csproj.CoreCompileInputs.cache
-C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.sourcelink.json
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.deps.json
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.dll
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.pdb
@@ -12,6 +6,12 @@ C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.Conso
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Rag.SemanticKernel.AppSettings.pdb
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Elastic.SemanticKernel.Connectors.Elasticsearch.pdb
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\bin\Debug\net9.0\Elastic.SemanticKernel.Connectors.Elasticsearch.xml
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.csproj.AssemblyReference.cache
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.GeneratedMSBuildEditorConfig.editorconfig
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.AssemblyInfoInputs.cache
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.AssemblyInfo.cs
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.csproj.CoreCompileInputs.cache
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.sourcelink.json
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.Sema.8DBCB812.Up2Date
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\Rag.SemanticKernel.Startup.ConsoleApp.dll
 C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.Startup.ConsoleApp\obj\Debug\net9.0\refint\Rag.SemanticKernel.Startup.ConsoleApp.dll

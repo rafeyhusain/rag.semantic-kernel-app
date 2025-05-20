@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rag.SemanticKernel.Core.Sdk.Service.Mistral;
+using Rag.SemanticKernel.Abstractions.LlmModel;
+using Rag.SemanticKernel.Llm.Mistral;
+using Rag.SemanticKernel.Model.Vector;
 using Rag.SemanticKernel.Startup.ConsoleApp.Events;
 using System.Threading.Tasks;
 
@@ -22,9 +24,9 @@ public class Application : Rag.SemanticKernel.Startup.ConsoleApp.Application
 
     private void Application_BeforeServiceContainerCreated(object sender, BeforeServiceContainerCreatedEventArgs e)
     {
-        e.Builder.Services.AddSemanticService(e.Settings);
+        e.Builder.Services.AddSemanticService<Markdown>(e.Settings, Abstractions.LlmModel.Llm.Mistral);
 
-        e.Builder.Services.AddSingleton<SemanticService>();
+        e.Builder.Services.AddTransient<SemanticService>();
     }
 
     private void Application_AfterServiceContainerCreated(object sender, AfterServiceContainerCreatedEventArgs e)

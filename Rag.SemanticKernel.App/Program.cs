@@ -1,6 +1,4 @@
-using Microsoft.SemanticKernel;
 using Rag.SemanticKernel.Core.Sdk.App;
-using Serilog;
 using System;
 using System.Threading.Tasks;
 
@@ -8,19 +6,17 @@ namespace Rag.SemanticKernel.App;
 
 internal sealed class Program
 {
+    private static Startup.Application _app;
+
     public static async Task Main(string[] args)
     {
         try
         {
-            var app = new Application();
+            _app = new Startup.Application();
+            
+            await _app.Init(args);
 
-            await app.Init(args);
-
-            await app.GenerateEmbeddings();
-
-            //var answer = await app.Ask("det sanna värdet");
-
-            //Console.WriteLine($"{answer}");
+            await _app.GenerateEmbeddings();
 
             Console.ReadKey();
         }

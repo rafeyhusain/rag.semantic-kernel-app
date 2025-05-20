@@ -1,9 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using System;
-using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -18,11 +16,13 @@ public class QuestionService
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
-    public async Task<string> Ask(Kernel kernel, string question, QuestionServiceOptions options)
+    public Kernel Kernel { get; internal set; }
+
+    public async Task<string> Ask(string question, QuestionServiceOptions options)
     {
         try
         {
-            return await AskWithRetry(kernel, question, options);
+            return await AskWithRetry(question, options);
         }
         catch (Exception ex)
         {
@@ -31,14 +31,14 @@ public class QuestionService
         }
     }
 
-    public async Task<string> AskWithRetry(Kernel kernel, string question, QuestionServiceOptions options, int maxRetries = 5)
+    public async Task<string> AskWithRetry(string question, QuestionServiceOptions options, int maxRetries = 5)
     {
         int delay = 1000;
         for (int attempt = 0; attempt < maxRetries; attempt++)
         {
             try
             {
-                var response = await kernel.InvokePromptAsync(
+                var response = await Kernel.InvokePromptAsync(
                         promptTemplate: options.HandlebarTemplate.Prompt,
                         arguments: new KernelArguments
                         {

@@ -1,0 +1,12 @@
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\bin\Debug\net9.0\Rag.SemanticKernel.AppSettings.deps.json
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\bin\Debug\net9.0\Rag.SemanticKernel.AppSettings.dll
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\bin\Debug\net9.0\Rag.SemanticKernel.AppSettings.pdb
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.GeneratedMSBuildEditorConfig.editorconfig
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.AssemblyInfoInputs.cache
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.AssemblyInfo.cs
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.csproj.CoreCompileInputs.cache
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.sourcelink.json
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.dll
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\refint\Rag.SemanticKernel.AppSettings.dll
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\Rag.SemanticKernel.AppSettings.pdb
+C:\data\rafeyhusain\git\rag.semantic-kernel-app\Rag.SemanticKernel.AppSettings\obj\Debug\net9.0\ref\Rag.SemanticKernel.AppSettings.dll

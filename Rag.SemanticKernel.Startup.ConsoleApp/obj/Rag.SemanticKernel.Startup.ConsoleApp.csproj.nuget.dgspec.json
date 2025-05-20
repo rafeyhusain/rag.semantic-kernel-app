@@ -1,0 +1,396 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.Startup.ConsoleApp\\Rag.SemanticKernel.Startup.ConsoleApp.csproj": {}
+  },
+  "projects": {
+    "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\Rag.SemanticKernel.AppSettings.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\Rag.SemanticKernel.AppSettings.csproj",
+        "projectName": "Rag.SemanticKernel.AppSettings",
+        "projectPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\Rag.SemanticKernel.AppSettings.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.Startup.ConsoleApp\\Rag.SemanticKernel.Startup.ConsoleApp.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.Startup.ConsoleApp\\Rag.SemanticKernel.Startup.ConsoleApp.csproj",
+        "projectName": "Rag.SemanticKernel.Startup.ConsoleApp",
+        "projectPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.Startup.ConsoleApp\\Rag.SemanticKernel.Startup.ConsoleApp.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.Startup.ConsoleApp\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\Rag.SemanticKernel.AppSettings.csproj": {
+                "projectPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\Rag.SemanticKernel.AppSettings\\Rag.SemanticKernel.AppSettings.csproj"
+              },
+              "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\Elastic.SemanticKernel.Connectors.Elasticsearch\\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj": {
+                "projectPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\Elastic.SemanticKernel.Connectors.Elasticsearch\\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "dependencies": {
+            "Elastic.Clients.Elasticsearch": {
+              "target": "Package",
+              "version": "[8.16.2, )"
+            },
+            "Microsoft.Build.CopyOnWrite": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.334, )"
+            },
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.SemanticKernel.Connectors.AzureOpenAI": {
+              "target": "Package",
+              "version": "[1.30.0, )"
+            },
+            "Microsoft.SemanticKernel.PromptTemplates.Handlebars": {
+              "target": "Package",
+              "version": "[1.30.0, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.5.2, )"
+            },
+            "Serilog.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Serilog.Settings.Configuration": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
+            "Validation": {
+              "target": "Package",
+              "version": "[2.6.68, )"
+            },
+            "YamlDotNet": {
+              "target": "Package",
+              "version": "[16.3.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\Elastic.SemanticKernel.Connectors.Elasticsearch\\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\Elastic.SemanticKernel.Connectors.Elasticsearch\\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj",
+        "projectName": "Elastic.SemanticKernel.Connectors.Elasticsearch",
+        "projectPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\Elastic.SemanticKernel.Connectors.Elasticsearch\\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj",
+        "packagesPath": "C:\\Users\\HP\\.nuget\\packages\\",
+        "outputPath": "C:\\data\\rafeyhusain\\git\\rag.semantic-kernel-app\\semantic-kernel-net\\.artifacts\\obj\\Elastic.SemanticKernel.Connectors.Elasticsearch\\",
+        "projectStyle": "PackageReference",
+        "crossTargeting": true,
+        "centralPackageVersionsManagementEnabled": true,
+        "CentralPackageTransitivePinningEnabled": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\HP\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8",
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://www.nuget.org/api/v2/": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8",
+            "projectReferences": {}
+          },
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "noWarn": [
+            "NU5105"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreLockProperties": {
+          "restorePackagesWithLockFile": "true"
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8",
+          "dependencies": {
+            "Elastic.Clients.Elasticsearch": {
+              "target": "Package",
+              "version": "[8.16.2, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Build.CopyOnWrite": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.334, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.SemanticKernel.Abstractions": {
+              "target": "Package",
+              "version": "[1.30.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "MinVer": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[8.0.5, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "Elastic.Clients.Elasticsearch": "8.16.2",
+            "Microsoft.Build.CopyOnWrite": "1.0.334",
+            "Microsoft.Extensions.Hosting": "8.0.1",
+            "Microsoft.SemanticKernel.Abstractions": "1.30.0",
+            "Microsoft.SemanticKernel.Connectors.AzureOpenAI": "1.30.0",
+            "Microsoft.SemanticKernel.PromptTemplates.Handlebars": "1.30.0",
+            "Microsoft.SourceLink.GitHub": "8.0.0",
+            "MinVer": "6.0.0",
+            "System.Text.Json": "8.0.5"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300/PortableRuntimeIdentifierGraph.json"
+        },
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "Elastic.Clients.Elasticsearch": {
+              "target": "Package",
+              "version": "[8.16.2, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.Build.CopyOnWrite": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.334, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.SemanticKernel.Abstractions": {
+              "target": "Package",
+              "version": "[1.30.0, )",
+              "versionCentrallyManaged": true
+            },
+            "Microsoft.SourceLink.GitHub": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "MinVer": {
+              "target": "Package",
+              "version": "[6.0.0, )",
+              "versionCentrallyManaged": true
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[8.0.5, )",
+              "versionCentrallyManaged": true
+            }
+          },
+          "centralPackageVersions": {
+            "Elastic.Clients.Elasticsearch": "8.16.2",
+            "Microsoft.Build.CopyOnWrite": "1.0.334",
+            "Microsoft.Extensions.Hosting": "8.0.1",
+            "Microsoft.SemanticKernel.Abstractions": "1.30.0",
+            "Microsoft.SemanticKernel.Connectors.AzureOpenAI": "1.30.0",
+            "Microsoft.SemanticKernel.PromptTemplates.Handlebars": "1.30.0",
+            "Microsoft.SourceLink.GitHub": "8.0.0",
+            "MinVer": "6.0.0",
+            "System.Text.Json": "8.0.5"
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

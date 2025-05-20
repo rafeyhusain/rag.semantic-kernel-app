@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
+using Rag.SemanticKernel.AppSettings;
+using Rag.SemanticKernel.Guards;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,22 +22,17 @@ namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 public class EmbeddingService : ITextEmbeddingGenerationService
 {
     private readonly ILogger<EmbeddingService> _logger;
-    private readonly string _endpoint;
-    private readonly string _apiKey;
-    private readonly string _embeddingModel;
+    private readonly ModelSettings _model;
     private readonly HttpClient _httpClient;
 
-    public EmbeddingService(ILogger<EmbeddingService> logger, string endpoint, string apiKey, string embeddingModel)
+    public EmbeddingService(ILogger<EmbeddingService> logger, ModelSettings model)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-        _endpoint = endpoint ?? "https://api.mistral.ai/v1";
-        _apiKey = apiKey ?? throw new InvalidOperationException("Missing Mistral:ApiKey configuration");
-        _embeddingModel = embeddingModel ?? throw new InvalidOperationException("Missing Mistral:EmbeddingModel configuration");
+        _logger = Guard.ThrowIfNull(logger);
+        _model = Guard.ThrowIfNull(model);
 
         // Initialize HTTP client for Mistral API
         _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _model.ApiKey);
     }
 
     [JsonPropertyName("embedding")]
@@ -44,8 +41,8 @@ public class EmbeddingService : ITextEmbeddingGenerationService
     public IReadOnlyDictionary<string, object> Attributes => new Dictionary<string, object?>
     {
         ["Provider"] = "Mistral",
-        ["Endpoint"] = _endpoint,
-        ["EmbeddingModel"] = _embeddingModel,
+        ["Endpoint"] = _model.Endpoint,
+        ["EmbeddingModel"] = _model.EmbeddingModel,
         ["SupportsStreaming"] = true,
         ["SupportsFunctionCalling"] = false,
         ["SupportsEmbeddings"] = true
@@ -64,12 +61,12 @@ public class EmbeddingService : ITextEmbeddingGenerationService
 
             var requestBody = JsonSerializer.Serialize(new
             {
-                model = _embeddingModel,
+                model = _model.EmbeddingModel,
                 input = data  // Send full list
             });
 
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_endpoint}/embeddings", content, cancellationToken);
+            var response = await _httpClient.PostAsync($"{_model.Endpoint}/embeddings", content, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {

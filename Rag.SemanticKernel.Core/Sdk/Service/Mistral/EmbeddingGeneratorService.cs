@@ -3,12 +3,12 @@ using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
 using Rag.SemanticKernel.Core.Sdk.Parser;
+using Stef.Validation;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
@@ -19,17 +19,19 @@ public class EmbeddingGeneratorService
     private readonly ITextEmbeddingGenerationService _embeddingService;
     private readonly IVectorStoreRecordCollection<string, Markdown> _vectorStoreCollection;
 
+    public Kernel Kernel { get; internal set; }
+
     public EmbeddingGeneratorService(
         ILogger<EmbeddingService> logger,
         ITextEmbeddingGenerationService embeddingService,
         IVectorStoreRecordCollection<string, Markdown> vectorStoreCollection)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _embeddingService = embeddingService ?? throw new ArgumentNullException(nameof(embeddingService));
-        _vectorStoreCollection = vectorStoreCollection ?? throw new ArgumentNullException(nameof(vectorStoreCollection));
+        _logger = Guards.Guard.ThrowIfNull(logger);
+        _embeddingService = Guards.Guard.ThrowIfNull(embeddingService);
+        _vectorStoreCollection = Guards.Guard.ThrowIfNull(vectorStoreCollection);
     }
 
-    public async Task Generate(Kernel kernel, EmbeddingGeneratorServiceOptions options)
+    public async Task Generate(EmbeddingGeneratorServiceOptions options)
     {
         if (!Directory.Exists(options.InputFolder))
         {
@@ -65,41 +67,6 @@ public class EmbeddingGeneratorService
             throw;
         }
     }
-
-    private async Task GenerateEmbeddings1(string filePath)
-    {
-        // Crate collection and ingest a few demo records.
-        await _vectorStoreCollection.CreateCollectionIfNotExistsAsync();
-
-        var hotelsRaw = await File.ReadAllLinesAsync(filePath);
-
-        var hotels = hotelsRaw
-            .Where(line => !string.IsNullOrWhiteSpace(line))
-            .Select(line => line.Split(';'))
-            .Where(parts => parts.Length >= 4) // ID;HotelName;Description;Link
-            .ToList();
-
-        foreach (var chunk in hotels.Chunk(25))
-        {
-            var descriptions = chunk.Select(x => x[2]).ToArray();
-
-            var embeddings = await GenerateWithRetry(descriptions);
-
-            for (var i = 0; i < chunk.Length && i < embeddings.Count; ++i)
-            {
-                //var hotel = chunk[i];
-                //await _vectorStoreCollection.UpsertAsync(new Markdown
-                //{
-                //    HotelId = hotel[0],
-                //    HotelName = hotel[1],
-                //    Description = hotel[2],
-                //    Embeddings = embeddings[i],
-                //    Link = hotel[3]
-                //});
-            }
-        }
-    }
-
 
     private async Task GenerateEmbeddings(string filePath)
     {

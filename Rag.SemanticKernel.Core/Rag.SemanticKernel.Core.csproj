@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net8</TargetFramework>
+		<TargetFramework>net9</TargetFramework>
 		<IsPublishable>true</IsPublishable>
 		<IsPackable>false</IsPackable>
 		<NoWarn>SKEXP0001, SKEXP0020</NoWarn>
@@ -14,6 +14,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
 		<PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.30.0" />
 		<PackageReference Include="Microsoft.SemanticKernel.PromptTemplates.Handlebars" Version="1.30.0" />
 		<PackageReference Include="Polly" Version="8.5.2" />
@@ -26,6 +27,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Rag.SemanticKernel.AppSettings\Rag.SemanticKernel.AppSettings.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Guards\Rag.SemanticKernel.Guards.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Rest\Rag.SemanticKernel.Rest.csproj" />
 		<ProjectReference Include="..\semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
 	</ItemGroup>
 

@@ -1,6 +1,6 @@
-using Microsoft.Extensions.Hosting;
-using Microsoft.SemanticKernel;
+using Microsoft.Extensions.Options;
 using Rag.SemanticKernel.Core.Sdk.Service.Mistral;
+using Rag.SemanticKernel.AppSettings;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +10,10 @@ var configuration = new ConfigurationBuilder()
         .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
         .AddEnvironmentVariables()
         .Build();
+
+builder.Services.Configure<Settings>(builder.Configuration);
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<Settings>>().Value);
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(configuration)

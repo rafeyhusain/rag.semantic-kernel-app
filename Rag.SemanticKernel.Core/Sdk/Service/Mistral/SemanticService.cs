@@ -1,4 +1,7 @@
-﻿using Microsoft.SemanticKernel;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 using Rag.SemanticKernel.Core.Sdk.Model;
 using Rag.SemanticKernel.Core.Sdk.Service.Azure;
 using System.Text.Json;
@@ -13,16 +16,25 @@ public class SemanticService
 {
     private readonly QuestionService _questionService;
     private readonly EmbeddingGeneratorService _embeddingGenerator;
+    public Kernel Kernel { get; internal set; }
 
-    public SemanticService(QuestionService questionService, EmbeddingGeneratorService embeddingGenerator)
+    public SemanticService(IHost host, QuestionService questionService, EmbeddingGeneratorService embeddingGenerator)
     {
+        Kernel = host.Services.GetService<Kernel>()!;
+
+        var textSearch = host.Services.GetService<VectorStoreTextSearch<Markdown>>()!;
+        Kernel.Plugins.Add(textSearch.CreateWithGetTextSearchResults("SearchPlugin"));
+
         _questionService = questionService;
+        _questionService.Kernel = Kernel;
+
         _embeddingGenerator = embeddingGenerator;
+        _embeddingGenerator.Kernel = Kernel;
     }
 
-    public async Task<AnswerModel> AskModel(Kernel kernel, string question)
+    public async Task<AnswerModel> AskModel(string question)
     {
-        var answerText = await Ask(kernel, question);
+        var answerText = await Ask(question);
 
         var options = new JsonSerializerOptions
         {
@@ -34,15 +46,15 @@ public class SemanticService
         return answer;
     }
 
-    public Task<string> Ask(Kernel kernel, string question)
-        => Ask(kernel, question, new QuestionServiceOptions());
+    public Task<string> Ask(string question)
+        => Ask(question, new QuestionServiceOptions());
 
-    public Task<string> Ask(Kernel kernel, string question, QuestionServiceOptions options)
-    => _questionService.Ask(kernel, question, options);
+    public Task<string> Ask(string question, QuestionServiceOptions options)
+    => _questionService.Ask(question, options);
 
-    public Task GenerateEmbeddings(Kernel kernel)
-        => GenerateEmbeddings(kernel, new EmbeddingGeneratorServiceOptions());
+    public Task GenerateEmbeddings()
+        => GenerateEmbeddings(new EmbeddingGeneratorServiceOptions());
 
-    public Task GenerateEmbeddings(Kernel kernel, EmbeddingGeneratorServiceOptions options)
-        => _embeddingGenerator.Generate(kernel, options);
+    public Task GenerateEmbeddings(EmbeddingGeneratorServiceOptions options)
+        => _embeddingGenerator.Generate(options);
 }

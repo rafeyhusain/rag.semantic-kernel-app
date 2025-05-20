@@ -1,4 +1,10 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.TextGeneration;
+using Rag.SemanticKernel.AppSettings;
+using Rag.SemanticKernel.Guards;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -7,10 +13,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.TextGeneration;
 
 namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 
@@ -20,29 +22,24 @@ namespace Rag.SemanticKernel.Core.Sdk.Service.Mistral;
 public class ChatCompletionService : IChatCompletionService, ITextGenerationService
 {
     private readonly ILogger<ChatCompletionService> _logger;
-    private readonly string _endpoint;
-    private readonly string _apiKey;
-    private readonly string _completionModel;
     private readonly HttpClient _httpClient;
+    private readonly ModelSettings _model;
 
-    public ChatCompletionService(ILogger<ChatCompletionService> logger, string endpoint, string apiKey, string completionModel)
+    public ChatCompletionService(ILogger<ChatCompletionService> logger, ModelSettings model)
     {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-
-        _endpoint = endpoint ?? "https://api.mistral.ai/v1";
-        _apiKey = apiKey ?? throw new InvalidOperationException("Missing Mistral:ApiKey configuration");
-        _completionModel = completionModel ?? throw new InvalidOperationException("Missing Mistral:CompletionModel configuration");
+        _logger = Guard.ThrowIfNull(logger);
+        _model = Guard.ThrowIfNull(model);
 
         // Initialize HTTP client for Mistral API
         _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _model.ApiKey);
     }
 
     public IReadOnlyDictionary<string, object> Attributes => new Dictionary<string, object?>
     {
         ["Provider"] = "Mistral",
-        ["Endpoint"] = _endpoint,
-        ["CompletionModel"] = _completionModel,
+        ["Endpoint"] = _model.Endpoint,
+        ["CompletionModel"] = _model.CompletionModel,
         ["SupportsStreaming"] = true,
         ["SupportsFunctionCalling"] = false,
         ["SupportsEmbeddings"] = true
@@ -55,7 +52,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     {
         try
         {
-            _logger.LogDebug("Generating chat completion with model: {Model}", _completionModel);
+            _logger.LogDebug("Generating chat completion with model: {Model}", _model.CompletionModel);
 
             // Convert ChatHistory to Mistral's message format
             var messages = new List<object>();
@@ -79,7 +76,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             // Create request payload
             var requestBody = JsonSerializer.Serialize(new
             {
-                model = _completionModel,
+                model = _model.CompletionModel,
                 messages,
                 temperature = 0.7,
                 max_tokens = 4096,
@@ -88,7 +85,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             });
 
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_endpoint}/chat/completions", content, cancellationToken);
+            var response = await _httpClient.PostAsync($"{_model.Endpoint}/chat/completions", content, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -249,7 +246,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     {
         try
         {
-            _logger.LogDebug("Generating text completion with model: {Model}", _completionModel);
+            _logger.LogDebug("Generating text completion with model: {Model}", _model.CompletionModel);
 
             // Create a ChatHistory with the prompt as a user message
             var chatHistory = new ChatHistory();
@@ -258,7 +255,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             // Use the chat completions endpoint since Mistral mainly works with chat
             var requestBody = JsonSerializer.Serialize(new
             {
-                model = _completionModel,
+                model = _model.CompletionModel,
                 messages = new[]
                 {
                     new { role = "user", content = prompt }
@@ -270,7 +267,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             });
 
             var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_endpoint}/chat/completions", content, cancellationToken);
+            var response = await _httpClient.PostAsync($"{_model.Endpoint}/chat/completions", content, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {

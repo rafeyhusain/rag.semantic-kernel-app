@@ -1,15 +1,18 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rag.SemanticKernel.Abstractions.LlmModel;
-using Rag.SemanticKernel.Llm.Mistral;
+using Rag.SemanticKernel.Llm.Core.Extensions;
 using Rag.SemanticKernel.Model.Vector;
+using Rag.SemanticKernel.Parser.Markdown;
 using Rag.SemanticKernel.Startup.ConsoleApp.Events;
+using Rag.SemanticKernel.Startup.ConsoleApp.Startup;
 using System.Threading.Tasks;
 
 namespace Rag.SemanticKernel.App.Startup;
 
-public class Application : Rag.SemanticKernel.Startup.ConsoleApp.Application
+public class Application<T, TRecord> : Application
+    where T : class, IDocument, new()
+    where TRecord : class
 {
-    private SemanticService _semanticService;
+    private Llm.Mistral.SemanticService<T, TRecord> _semanticService;
 
     public Application()
     {
@@ -24,14 +27,18 @@ public class Application : Rag.SemanticKernel.Startup.ConsoleApp.Application
 
     private void Application_BeforeServiceContainerCreated(object sender, BeforeServiceContainerCreatedEventArgs e)
     {
-        e.Builder.Services.AddSemanticService<Markdown>(e.Settings, Abstractions.LlmModel.Llm.Mistral);
+        e.Builder.Services.AddTransient<Llm.Mistral.EmbeddingService<T, TRecord>>();
+        e.Builder.Services.AddTransient<Llm.Mistral.ChatCompletionService>();
+        e.Builder.Services.AddTransient<Llm.Mistral.SemanticService<T, TRecord>>();
 
-        e.Builder.Services.AddTransient<SemanticService>();
+        e.Builder.Services.AddSemanticService<T, TRecord, MarkdownFileParser>(
+            e.Settings,
+            Abstractions.LlmModel.Llm.Mistral);
     }
 
     private void Application_AfterServiceContainerCreated(object sender, AfterServiceContainerCreatedEventArgs e)
     {
-        _semanticService = e.Host.Services.GetService<SemanticService>();
+        _semanticService = e.Host.Services.GetService<Llm.Mistral.SemanticService<T, TRecord>>();
     }
 
     public async Task GenerateEmbeddings()

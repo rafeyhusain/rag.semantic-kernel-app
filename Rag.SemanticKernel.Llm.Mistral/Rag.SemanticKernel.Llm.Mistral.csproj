@@ -16,6 +16,7 @@
 		<ProjectReference Include="..\Rag.SemanticKernel.Abstractions\Rag.SemanticKernel.Abstractions.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.AppSettings\Rag.SemanticKernel.AppSettings.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Guards\Rag.SemanticKernel.Guards.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Llm.Core\Rag.SemanticKernel.Llm.Core.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Model\Rag.SemanticKernel.Model.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Parser.Markdown\Rag.SemanticKernel.Parser.Markdown.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Rest\Rag.SemanticKernel.Rest.csproj" />

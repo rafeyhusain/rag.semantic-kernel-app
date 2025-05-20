@@ -16,6 +16,18 @@ public class ElasticsearchSettings
     public string User { get; set; } = "";
     public string Password { get; set; } = "";
     public string Index { get; set; } = "";
+    public string this[string modelName]
+    {
+        get
+        {
+            var raw = $"{Index}_{modelName}";
+            var lower = raw.ToLowerInvariant();
+
+            // Replace invalid characters (keep lowercase letters, digits, underscores, and hyphens)
+            var safe = System.Text.RegularExpressions.Regex.Replace(lower, @"[^a-z0-9_\-]", "");
+            return safe;
+        }
+    }
 }
 
 public class ModelSettings

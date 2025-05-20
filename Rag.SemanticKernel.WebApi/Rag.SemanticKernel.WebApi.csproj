@@ -1,36 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="logs\**" />
-    <Content Remove="logs\**" />
-    <EmbeddedResource Remove="logs\**" />
-    <None Remove="logs\**" />
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Remove="logs\**" />
+		<Content Remove="logs\**" />
+		<EmbeddedResource Remove="logs\**" />
+		<None Remove="logs\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Remove="log20250518.txt" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Abstractions\Rag.SemanticKernel.Abstractions.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Llm.Core\Rag.SemanticKernel.Llm.Core.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Llm.Mistral\Rag.SemanticKernel.Llm.Mistral.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Logger.Extensions\Rag.SemanticKernel.Logger.Extensions.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Startup.WebApp\Rag.SemanticKernel.Startup.WebApp.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="data\input\nfs-2016-13.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="data\input\stafs-2025-1.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Update="data\templates\json.md">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="data\input\nfs-2016-13.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="data\input\stafs-2025-1.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="data\templates\json.md">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

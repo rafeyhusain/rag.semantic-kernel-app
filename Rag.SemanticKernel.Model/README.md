@@ -1,6 +1,7 @@
 # Rag.SemanticKernel.Model
 
-This project contains the core data models and DTOs used throughout the Semantic Kernel application. It includes models for vector operations and API interactions.
+This project contains the core data models and DTOs used throughout the Semantic Kernel application. 
+It includes models for vector operations and API interactions.
 
 ## Structure
 
@@ -17,4 +18,5 @@ This project serves as the central location for:
 
 ## Usage
 
-This project is referenced by other projects in the solution that need to work with the defined data models and structures. 
+This project is referenced by other projects in the solution that need to work with the 
+defined data models and structures. 

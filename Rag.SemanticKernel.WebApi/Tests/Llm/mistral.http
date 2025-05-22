@@ -1,0 +1,28 @@
+### Chat Completion - Mistral API
+POST https://api.mistral.ai/v1/chat/completions
+Authorization: Bearer g8ljcUH57tKFvYTFn7XDnCPIClDkqsP3
+Content-Type: application/json
+
+{
+  "model": "mistral-small",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What's the capital of Sweden?"
+    }
+  ],
+  "temperature": 0.7,
+  "top_p": 1,
+  "max_tokens": 256
+}
+
+### Generate Embeddings - Mistral API
+POST https://api.mistral.ai/v1/embeddings
+Authorization: Bearer g8ljcUH57tKFvYTFn7XDnCPIClDkqsP3
+Content-Type: application/json
+
+{
+  "model": "mistral-embed",
+  "input": "The quick brown fox jumps over the lazy dog"
+}
+

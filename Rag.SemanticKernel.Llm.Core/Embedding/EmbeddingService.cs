@@ -5,6 +5,7 @@ using Microsoft.SemanticKernel.Embeddings;
 using Rag.SemanticKernel.Abstractions.Parser;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Guards;
+using Rag.SemanticKernel.Model.Llm.Embedding;
 using Rag.SemanticKernel.Model.Vector;
 using System.Net.Http.Headers;
 using System.Text;
@@ -14,7 +15,7 @@ using System.Text.Json.Serialization;
 namespace Rag.SemanticKernel.Llm.Core.Embedding;
 
 /// <summary>
-/// Embedding Service for Mistral embeddings
+/// Embedding Service for embeddings
 /// </summary>
 public class EmbeddingService<T, TRecord> : ITextEmbeddingGenerationService
     where T : class, IDocument, new()
@@ -41,7 +42,7 @@ public class EmbeddingService<T, TRecord> : ITextEmbeddingGenerationService
         _parser = Guard.ThrowIfNull(parser);
         _model = Guard.ThrowIfNull(model);
 
-        // Initialize HTTP client for Mistral API
+        // Initialize HTTP client for API
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _model.ApiKey);
     }
@@ -153,7 +154,7 @@ public class EmbeddingService<T, TRecord> : ITextEmbeddingGenerationService
     }
 
     /// <summary>
-    //    /// Generates embeddings for the specified text using the Mistral API
+    //    /// Generates embeddings for the specified text using the API
     //    /// </summary>
     //    /// <param name="text">The text to generate embeddings for</param>
     //    /// <returns>A ReadOnlyMemory<float> containing the embedding vector</returns>
@@ -175,8 +176,8 @@ public class EmbeddingService<T, TRecord> : ITextEmbeddingGenerationService
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                _logger.LogError("Error from Mistral API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-                throw new HttpRequestException($"Mistral API error: {response.StatusCode}, {errorContent}");
+                _logger.LogError("Error from API: {StatusCode}, {Response}", response.StatusCode, errorContent);
+                throw new HttpRequestException($"API error: {response.StatusCode}, {errorContent}");
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();
@@ -184,8 +185,8 @@ public class EmbeddingService<T, TRecord> : ITextEmbeddingGenerationService
 
             if (embeddingResponse?.Data == null || embeddingResponse.Data.Count == 0)
             {
-                _logger.LogError("No embeddings returned from Mistral API");
-                throw new InvalidOperationException("No embeddings returned from Mistral API");
+                _logger.LogError("No embeddings returned from API");
+                throw new InvalidOperationException("No embeddings returned from API");
             }
 
             _logger.LogDebug("Successfully generated {Count} embeddings", embeddingResponse.Data.Count);

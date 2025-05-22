@@ -44,6 +44,7 @@ public static class SemanticServiceExtensions
         // Elasticsearch setup
         var elasticSettings = new ElasticsearchClientSettings(new Uri(settings.Elasticsearch.Url))
             .Authentication(new BasicAuthentication(settings.Elasticsearch.User, settings.Elasticsearch.Password));
+
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, TRecord>(settings.Elasticsearch[model.Name], elasticSettings);
 
         // Register dependent services
@@ -51,8 +52,8 @@ public static class SemanticServiceExtensions
         services.AddTransient(typeof(ModelSettings));
 
         // Register a _kernel instance with plugin injection
-        services.AddTransient(typeof(VectorStoreTextSearch<T>));
-        services.AddTransient(typeof(IKernelPluginInjector), typeof(KernelPluginInjector<T>));
+        services.AddTransient(typeof(VectorStoreTextSearch<TRecord>));
+        services.AddTransient(typeof(IKernelPluginInjector), typeof(KernelPluginInjector<TRecord>));
 
         services.AddSingleton(LoggerFactory.Create(builder =>
         {

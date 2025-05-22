@@ -18,7 +18,8 @@ This project provides core LLM (Large Language Model) functionality for the Sema
 
 ## Usage
 
-This project serves as the foundation for LLM-related functionality in the Semantic Kernel application. Other LLM-specific projects (like Azure and Mistral) build upon these core implementations.
+This project serves as the foundation for LLM-related functionality in the Semantic Kernel application. 
+Other LLM-specific projects (like Azure and Mistral) build upon these core implementations.
 
 ## Dependencies
 

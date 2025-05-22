@@ -1,15 +1,14 @@
 ﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.SemanticKernel.Model.Vector;
 
 namespace Rag.SemanticKernel.Llm.Core.Plugins;
 
-public class KernelPluginInjector<T> : IKernelPluginInjector
-    where T : class, IDocument, new()
+public class KernelPluginInjector<TRecord> : IKernelPluginInjector
+    where TRecord : class
 {
-    private readonly VectorStoreTextSearch<T> _searchService;
+    private readonly VectorStoreTextSearch<TRecord> _searchService;
 
-    public KernelPluginInjector(VectorStoreTextSearch<T> searchService)
+    public KernelPluginInjector(VectorStoreTextSearch<TRecord> searchService)
     {
         _searchService = searchService;
     }

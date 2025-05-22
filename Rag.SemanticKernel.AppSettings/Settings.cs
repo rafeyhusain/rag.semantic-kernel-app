@@ -7,7 +7,7 @@ public class Settings
     public SerilogSettings Serilog { get; set; } = new();
     public PollySettings Polly { get; set; } = new();
     public ModelSettings this[string modelName] =>
-        Models.FirstOrDefault(m => m.Name == modelName) ?? throw new KeyNotFoundException($"Model '{modelName}' not found.");
+        Models.FirstOrDefault(m => m.Name.ToLower() == modelName.ToLower()) ?? throw new KeyNotFoundException($"Model '{modelName}' not found.");
 }
 
 public class ElasticsearchSettings

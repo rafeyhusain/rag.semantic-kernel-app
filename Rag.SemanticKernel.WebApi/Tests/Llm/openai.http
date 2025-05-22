@@ -1,0 +1,71 @@
+### Chat Completions - OpenAI GPT
+POST https://api.openai.com/v1/chat/completions
+Authorization: Bearer `k-proj-vSPJL2hcQsVk42Tk1nE38CsYo3oQo9CIZSDQh4ljJC0t21nTiXTqFKDwN_ngXb4JgUXBRHGnWeT3BlbkFJacQ1O4ZCtPts3_XBM-zSaK2o13z_aFwFdClSurz0SBB8UCKR7kVt76p2RsS5ALHmJw7WARCeoA`
+Content-Type: application/json
+
+{
+  "model": "gpt-4",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello, who won the 2020 US presidential election?"
+    }
+  ],
+  "temperature": 0.7
+}
+
+HTTP/1.1 401 Unauthorized
+Date: Wed, 21 May 2025 08:21:06 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 415
+Connection: close
+vary: Origin
+x-request-id: req_149a2a8e9eac2c7e87802d838b7adefe
+strict-transport-security: max-age=31536000; includeSubDomains; preload
+cf-cache-status: DYNAMIC
+X-Content-Type-Options: nosniff
+Server: cloudflare
+CF-RAY: 9432a88808c8c914-KHI
+alt-svc: h3=":443"; ma=86400
+
+{
+  "error": {
+    "message": "Incorrect API key provided: `k-proj-*********************************************************************************************************************************************************eoA`. You can find your API key at https://platform.openai.com/account/api-keys.",
+    "type": "invalid_request_error",
+    "param": null,
+    "code": "invalid_api_key"
+  }
+}
+
+### Generate Embeddings - OpenAI API
+POST https://api.openai.com/v1/embeddings
+Authorization: Bearer `k-proj-vSPJL2hcQsVk42Tk1nE38CsYo3oQo9CIZSDQh4ljJC0t21nTiXTqFKDwN_ngXb4JgUXBRHGnWeT3BlbkFJacQ1O4ZCtPts3_XBM-zSaK2o13z_aFwFdClSurz0SBB8UCKR7kVt76p2RsS5ALHmJw7WARCeoA`
+Content-Type: application/json
+
+{
+  "input": "The quick brown fox jumps over the lazy dog",
+  "model": "text-embedding-3-small"
+}
+
+# HTTP/1.1 401 Unauthorized
+# Date: Wed, 21 May 2025 08:24:36 GMT
+# Content-Type: application/json; charset=utf-8
+# Content-Length: 415
+# Connection: close
+# vary: Origin
+# x-request-id: req_688129b084bdf4c6156e9e1be3f45049
+# strict-transport-security: max-age=31536000; includeSubDomains; preload
+# cf-cache-status: DYNAMIC
+# X-Content-Type-Options: nosniff
+# Server: cloudflare
+# CF-RAY: 9432ada42d39907b-KHI
+# alt-svc: h3=":443"; ma=86400
+
+# {
+#   "error": {
+#     "message": "Incorrect API key provided: `k-proj-*********************************************************************************************************************************************************eoA`. You can find your API key at https://platform.openai.com/account/api-keys.",
+#     "type": "invalid_request_error",
+#     "param": null,
+#     "code": "invalid_api_key"
+#   }
+# }

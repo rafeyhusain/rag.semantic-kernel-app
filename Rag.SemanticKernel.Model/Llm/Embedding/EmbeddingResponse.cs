@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Rag.SemanticKernel.Llm.Core.Embedding;
+namespace Rag.SemanticKernel.Model.Llm.Embedding;
 
 /// <summary>
 /// Response model for Mistral embeddings API

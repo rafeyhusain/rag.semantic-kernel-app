@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Rag.SemanticKernel.Llm.Core.Embedding;
+namespace Rag.SemanticKernel.Model.Llm.Embedding;
 
 /// <summary>
 /// Data model for Mistral embeddings

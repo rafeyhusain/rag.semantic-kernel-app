@@ -5,15 +5,15 @@ using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.TextGeneration;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Guards;
+using Rag.SemanticKernel.Model.Llm.ChatCompletion;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Rag.SemanticKernel.Llm.Core.ChatCompletion;
 
 /// <summary>
-/// Chat Completion Service for Mistral
+/// Chat Completion Service for 
 /// </summary>
 public class ChatCompletionService : IChatCompletionService, ITextGenerationService
 {
@@ -32,7 +32,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         _logger = Guard.ThrowIfNull(logger);
         _model = Guard.ThrowIfNull(model);
 
-        // Initialize HTTP client for Mistral API
+        // Initialize HTTP client for  API
         _httpClient = new HttpClient();
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _model.ApiKey);
     }
@@ -92,7 +92,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     }
 
     /// <summary>
-    /// Gets chat message contents from the Mistral API
+    /// Gets chat message contents from the  API
     /// </summary>
     public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings executionSettings = null, Kernel kernel = null, CancellationToken cancellationToken = default)
     {
@@ -100,7 +100,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         {
             _logger.LogDebug("Generating chat completion with model: {Model}", _model.CompletionModel);
 
-            // Convert ChatHistory to Mistral's message format
+            // Convert ChatHistory to 's message format
             var messages = new List<object>();
             foreach (var message in chatHistory)
             {
@@ -136,17 +136,17 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Error from Mistral API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-                throw new HttpRequestException($"Mistral API error: {response.StatusCode}, {errorContent}");
+                _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
+                throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
             }
 
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var completionResponse = JsonSerializer.Deserialize<MistralChatCompletionResponse>(responseContent);
+            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseContent);
 
             if (completionResponse?.Choices == null || completionResponse.Choices.Count == 0)
             {
-                _logger.LogError("No completion returned from Mistral API");
-                throw new InvalidOperationException("No completion returned from Mistral API");
+                _logger.LogError("No completion returned from  API");
+                throw new InvalidOperationException("No completion returned from  API");
             }
 
             var result = new List<ChatMessageContent>
@@ -174,7 +174,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     }
 
     /// <summary>
-    /// Gets streaming chat message contents from the Mistral API
+    /// Gets streaming chat message contents from the  API
     /// </summary>
     public async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(
         ChatHistory chatHistory,
@@ -192,7 +192,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //{
         //    _logger.LogDebug("Generating streaming chat completion with model: {Model}", _completionModel);
 
-        //    // Convert ChatHistory to Mistral's message format
+        //    // Convert ChatHistory to 's message format
         //    var messages = new List<object>();
         //    foreach (var message in chatHistory)
         //    {
@@ -235,8 +235,8 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //    if (!response.IsSuccessStatusCode)
         //    {
         //        var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-        //        _logger.LogError("Error from Mistral API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-        //        throw new HttpRequestException($"Mistral API error: {response.StatusCode}, {errorContent}");
+        //        _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
+        //        throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
         //    }
 
         //    var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
@@ -255,7 +255,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //        var json = line.Substring(5).Trim();
         //        if (json == "[DONE]") break;
 
-        //        var streamResponse = JsonSerializer.Deserialize<MistralStreamingChatCompletionResponse>(json);
+        //        var streamResponse = JsonSerializer.Deserialize<StreamingChatCompletionResponse>(json);
         //        if (streamResponse?.Choices == null || streamResponse.Choices.Count == 0) continue;
 
         //        var content = streamResponse.Choices[0].Delta?.Content;
@@ -282,7 +282,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     }
 
     /// <summary>
-    /// Gets text contents from the Mistral API
+    /// Gets text contents from the  API
     /// </summary>
     public async Task<IReadOnlyList<TextContent>> GetTextContentsAsync(
         string prompt,
@@ -298,7 +298,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             var chatHistory = new ChatHistory();
             chatHistory.AddUserMessage(prompt);
 
-            // Use the chat completions endpoint since Mistral mainly works with chat
+            // Use the chat completions endpoint since  mainly works with chat
             var requestBody = JsonSerializer.Serialize(new
             {
                 model = _model.CompletionModel,
@@ -318,17 +318,17 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Error from Mistral API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-                throw new HttpRequestException($"Mistral API error: {response.StatusCode}, {errorContent}");
+                _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
+                throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
             }
 
             var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var completionResponse = JsonSerializer.Deserialize<MistralChatCompletionResponse>(responseContent);
+            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseContent);
 
             if (completionResponse?.Choices == null || completionResponse.Choices.Count == 0)
             {
-                _logger.LogError("No completion returned from Mistral API");
-                throw new InvalidOperationException("No completion returned from Mistral API");
+                _logger.LogError("No completion returned from  API");
+                throw new InvalidOperationException("No completion returned from  API");
             }
 
             var result = new List<TextContent>
@@ -355,7 +355,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     }
 
     /// <summary>
-    /// Gets streaming text contents from the Mistral API
+    /// Gets streaming text contents from the  API
     /// </summary>
     public async IAsyncEnumerable<StreamingTextContent> GetStreamingTextContentsAsync(
         string prompt,
@@ -399,8 +399,8 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //    if (!response.IsSuccessStatusCode)
         //    {
         //        var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-        //        _logger.LogError("Error from Mistral API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-        //        throw new HttpRequestException($"Mistral API error: {response.StatusCode}, {errorContent}");
+        //        _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
+        //        throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
         //    }
 
         //    var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
@@ -419,7 +419,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //        var json = line.Substring(5).Trim();
         //        if (json == "[DONE]") break;
 
-        //        var streamResponse = JsonSerializer.Deserialize<MistralStreamingChatCompletionResponse>(json);
+        //        var streamResponse = JsonSerializer.Deserialize<StreamingChatCompletionResponse>(json);
         //        if (streamResponse?.Choices == null || streamResponse.Choices.Count == 0) continue;
 
         //        var content = streamResponse.Choices[0].Delta?.Content;
@@ -443,98 +443,4 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //    throw;
         //}
     }
-}
-
-// Response classes for Mistral API
-public class MistralChatCompletionResponse
-{
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-
-    [JsonPropertyName("object")]
-    public string Object { get; set; }
-
-    [JsonPropertyName("created")]
-    public long Created { get; set; }
-
-    [JsonPropertyName("model")]
-    public string Model { get; set; }
-
-    [JsonPropertyName("choices")]
-    public List<MistralChatChoice> Choices { get; set; }
-
-    [JsonPropertyName("usage")]
-    public MistralUsage Usage { get; set; }
-}
-
-public class MistralChatChoice
-{
-    [JsonPropertyName("index")]
-    public int Index { get; set; }
-
-    [JsonPropertyName("message")]
-    public MistralMessage Message { get; set; }
-
-    [JsonPropertyName("finish_reason")]
-    public string FinishReason { get; set; }
-}
-
-public class MistralMessage
-{
-    [JsonPropertyName("role")]
-    public string Role { get; set; }
-
-    [JsonPropertyName("content")]
-    public string Content { get; set; }
-}
-
-public class MistralStreamingChatCompletionResponse
-{
-    [JsonPropertyName("id")]
-    public string Id { get; set; }
-
-    [JsonPropertyName("object")]
-    public string Object { get; set; }
-
-    [JsonPropertyName("created")]
-    public long Created { get; set; }
-
-    [JsonPropertyName("model")]
-    public string Model { get; set; }
-
-    [JsonPropertyName("choices")]
-    public List<MistralStreamingChoice> Choices { get; set; }
-}
-
-public class MistralStreamingChoice
-{
-    [JsonPropertyName("index")]
-    public int Index { get; set; }
-
-    [JsonPropertyName("delta")]
-    public MistralDelta Delta { get; set; }
-
-    [JsonPropertyName("finish_reason")]
-    public string FinishReason { get; set; }
-}
-
-public class MistralDelta
-{
-    [JsonPropertyName("role")]
-    public string Role { get; set; }
-
-    [JsonPropertyName("content")]
-    public string Content { get; set; }
-}
-
-public class MistralUsage
-{
-    [JsonPropertyName("prompt_tokens")]
-    public int PromptTokens { get; set; }
-
-    [JsonPropertyName("completion_tokens")]
-    public int CompletionTokens { get; set; }
-
-    [JsonPropertyName("total_tokens")]
-    public int TotalTokens { get; set; }
 }

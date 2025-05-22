@@ -3,6 +3,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.SemanticKernel.TextGeneration;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.CommandLine;
 using Rag.SemanticKernel.Startup.ConsoleApp.Events;
@@ -40,6 +41,9 @@ public class Application
             .AddEnvironmentVariables()
             .Build();
 
+        var settings = new Settings();
+        configuration.Bind(settings);
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
@@ -49,10 +53,7 @@ public class Application
 
         builder.Services.AddSingleton<IConfiguration>(configuration);
 
-        var settings = new Settings();
-        configuration.Bind(settings); 
-
-        OnBeforeServiceContainerCreated(builder, settings); 
+        OnBeforeServiceContainerCreated(builder, settings);
 
         builder.Services.Configure<Settings>(configuration);
         builder.Services.AddSingleton(_ => settings);

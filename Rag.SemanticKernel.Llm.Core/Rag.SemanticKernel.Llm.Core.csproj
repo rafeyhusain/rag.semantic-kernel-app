@@ -23,4 +23,8 @@
 	  <ProjectReference Include="..\semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Store\" />
+  </ItemGroup>
+
 </Project>

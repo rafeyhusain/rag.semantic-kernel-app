@@ -12,13 +12,13 @@ public class SemanticService<T, TRecord>
     where T : class, IDocument, new()
     where TRecord : class
 {
-    private readonly ChatCompletionService _chatCompletionService;
+    private readonly ChatCompletionService<TRecord> _chatCompletionService;
     private readonly EmbeddingService<T, TRecord> _embeddingService;
     private readonly Kernel _kernel;
 
     public SemanticService(
         Kernel kernel,
-        ChatCompletionService chatCompletionService,
+        ChatCompletionService<TRecord> chatCompletionService,
         EmbeddingService<T, TRecord> embeddingService)
     {
         _kernel = Guard.ThrowIfNull(kernel);

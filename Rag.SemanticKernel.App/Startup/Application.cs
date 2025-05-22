@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel.TextGeneration;
+using Rag.SemanticKernel.Llm.Core.ChatCompletion;
 using Rag.SemanticKernel.Llm.Core.Extensions;
 using Rag.SemanticKernel.Model.Vector;
 using Rag.SemanticKernel.Parser.Markdown;
@@ -28,9 +29,9 @@ public class Application<T, TRecord> : Application
 
     private void Application_BeforeServiceContainerCreated(object sender, BeforeServiceContainerCreatedEventArgs e)
     {
-        //e.Builder.Services.AddTransient<Llm.Core.Embedding.EmbeddingService<T, TRecord>>();
-        //e.Builder.Services.AddTransient<Llm.Core.ChatCompletion.ChatCompletionService>();
-        //e.Builder.Services.AddTransient<Llm.Core.Api.SemanticService<T, TRecord>>();
+        e.Builder.Services.AddTransient<Llm.Core.Embedding.EmbeddingService<T, TRecord>>();
+        e.Builder.Services.AddTransient<Llm.Core.ChatCompletion.ChatCompletionService<TRecord>>();
+        e.Builder.Services.AddTransient<Llm.Core.Api.SemanticService<T, TRecord>>();
 
         e.Builder.Services.AddSemanticService<T, TRecord, MarkdownFileParser>(
             e.Settings,
@@ -39,7 +40,7 @@ public class Application<T, TRecord> : Application
 
     private void Application_AfterServiceContainerCreated(object sender, AfterServiceContainerCreatedEventArgs e)
     {
-        _semanticService = e.Host.Services.GetService<Llm.Core.Api.SemanticService<T, TRecord>>();
+        _semanticService = e.Host.Services.GetRequiredService<Llm.Core.Api.SemanticService<T, TRecord>>();
     }
 
     public async Task GenerateEmbeddings()

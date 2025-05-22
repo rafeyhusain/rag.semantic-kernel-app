@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.TextGeneration;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Guards;
+using Rag.SemanticKernel.Llm.Core.Plugins;
 using Rag.SemanticKernel.Model.Llm.ChatCompletion;
 using Rag.SemanticKernel.Rest;
 using System.Net.Http.Headers;
@@ -16,17 +18,20 @@ namespace Rag.SemanticKernel.Llm.Core.ChatCompletion;
 /// <summary>
 /// Chat Completion Service for 
 /// </summary>
-public class ChatCompletionService : IChatCompletionService, ITextGenerationService
+public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGenerationService
+    where TRecord : class
 {
-    private readonly ILogger<ChatCompletionService> _logger;
+    private readonly ILogger<ChatCompletionService<TRecord>> _logger;
     private readonly ModelPairSettings _pairSettings;
     private readonly Kernel _kernel;
     private readonly RestService _restService;
+    private readonly VectorStoreTextSearch<TRecord> _searchService;
 
     public ChatCompletionService(
         Kernel kernel, 
-        ILogger<ChatCompletionService> logger,
+        ILogger<ChatCompletionService<TRecord>> logger,
         RestService restService,
+        VectorStoreTextSearch<TRecord> searchService,
         ModelPairSettings pairSettings
         )
     {
@@ -34,6 +39,9 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         _logger = Guard.ThrowIfNull(logger);
         _restService = Guard.ThrowIfNull(restService);
         _pairSettings = Guard.ThrowIfNull(pairSettings);
+        _searchService = Guard.ThrowIfNull(searchService);
+
+        KernelPluginInjector<TRecord>.InjectPlugins(_kernel, _searchService);
 
         _restService.BaseUrl = _pairSettings.Endpoint;
         _restService.SetApiKey(_pairSettings.ApiKey);
@@ -55,8 +63,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         {
             var arguments = new KernelArguments
             {
-                ["input"] = question,
-                ["serviceId"] = _pairSettings.CompletionModel
+                ["question"] = question
             };
 
             var response = await _kernel.InvokePromptAsync(
@@ -69,11 +76,10 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
 
             return result;
         }
-        catch (HttpRequestException ex) 
+        catch (Exception ex) 
         {
-            _logger.LogError(ex, "Error chatcompletion.ask");
-
-            return "";
+            _logger.LogError(ex, "Error ChatCompletion.Ask");
+            throw;
         }
     }
 
@@ -282,8 +288,6 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
                     new { role = "user", content = prompt }
                 }
             };
-
-            /////////////////
 
             // Create request payload
             var request = new ChatCompletionRequest

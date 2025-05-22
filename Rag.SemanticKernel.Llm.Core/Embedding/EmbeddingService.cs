@@ -1,10 +1,12 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Rag.SemanticKernel.Abstractions.Parser;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Guards;
+using Rag.SemanticKernel.Llm.Core.Plugins;
 using Rag.SemanticKernel.Model.Llm.Embedding;
 using Rag.SemanticKernel.Model.Vector;
 using Rag.SemanticKernel.Rest;

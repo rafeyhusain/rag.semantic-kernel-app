@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.Model", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.Llm.Core", "Rag.SemanticKernel.Llm.Core\Rag.SemanticKernel.Llm.Core.csproj", "{2D833FE9-0817-4187-A4A2-8B30E6D5B0E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rag.SemanticKernel.CommandLine", "Rag.SemanticKernel.CommandLine\Rag.SemanticKernel.CommandLine.csproj", "{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -242,6 +244,18 @@ Global
 		{2D833FE9-0817-4187-A4A2-8B30E6D5B0E3}.Release|x64.Build.0 = Release|Any CPU
 		{2D833FE9-0817-4187-A4A2-8B30E6D5B0E3}.Release|x86.ActiveCfg = Release|Any CPU
 		{2D833FE9-0817-4187-A4A2-8B30E6D5B0E3}.Release|x86.Build.0 = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|x64.Build.0 = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Debug|x86.Build.0 = Debug|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|x64.ActiveCfg = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|x64.Build.0 = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D8969C5-2391-4FFE-AAD6-1F41FF814A97}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

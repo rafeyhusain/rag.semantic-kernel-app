@@ -9,7 +9,8 @@
 	
   <ItemGroup>
     <ProjectReference Include="..\Rag.SemanticKernel.Abstractions\Rag.SemanticKernel.Abstractions.csproj" />
-    <ProjectReference Include="..\Rag.SemanticKernel.Llm.Mistral\Rag.SemanticKernel.Llm.Mistral.csproj" />
+    <ProjectReference Include="..\Rag.SemanticKernel.CommandLine\Rag.SemanticKernel.CommandLine.csproj" />
+    <ProjectReference Include="..\Rag.SemanticKernel.Llm.Core\Rag.SemanticKernel.Llm.Core.csproj" />
     <ProjectReference Include="..\Rag.SemanticKernel.Logger.Extensions\Rag.SemanticKernel.Logger.Extensions.csproj" />
     <ProjectReference Include="..\Rag.SemanticKernel.Startup.ConsoleApp\Rag.SemanticKernel.Startup.ConsoleApp.csproj" />
   </ItemGroup>

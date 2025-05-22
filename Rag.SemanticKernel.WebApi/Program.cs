@@ -4,7 +4,6 @@ using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Model.Vector;
 using Rag.SemanticKernel.Parser.Markdown;
 using Serilog;
-using Rag.SemanticKernel.Llm.Core.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,13 +30,13 @@ builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.EmbeddingService<Ma
 builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.ChatCompletionService>();
 builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.SemanticService<MarkdownDocument, Markdown>>();
 
-builder.Services.AddSemanticService<MarkdownDocument, Markdown, MarkdownFileParser>(
-    e.Settings,
-    Rag.SemanticKernel.Abstractions.LlmModel.Llm.Mistral);
+//builder.Services.AddSemanticService<MarkdownDocument, Markdown, MarkdownFileParser>(
+//    e.Settings,
+//    Rag.SemanticKernel.Abstractions.LlmModel.Llm.Mistral);
 
-builder.Services.AddSemanticService(configuration);
+//builder.Services.AddSemanticService(configuration);
 
-builder.Services.AddSingleton<SemanticService>();
+//builder.Services.AddSingleton<SemanticService>();
 
 builder.Host.UseSerilog();
 

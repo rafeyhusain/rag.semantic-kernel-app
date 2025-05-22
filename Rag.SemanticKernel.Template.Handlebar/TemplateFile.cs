@@ -12,7 +12,7 @@ public class TemplateFile
     public string FilePath { get; set; } =
         Path.Combine(AppContext.BaseDirectory, "data/templates/", "json.md");
 
-    public string Prompt { get; set; }
+    public string? Prompt { get; set; }
 
     public void Load()
     {

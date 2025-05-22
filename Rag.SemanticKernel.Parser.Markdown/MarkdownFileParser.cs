@@ -11,7 +11,7 @@ public class MarkdownFileParser : IFileParser
     public string FilePath { get; private set; } = "";
     public string FileName => Path.GetFileName(FilePath);
     public string FileNameWithoutExtension => Path.GetFileNameWithoutExtension(FilePath);
-    public List<ParsedBlock> Blocks { get; private set; } = new();
+    public List<ParsedBlock> Blocks { get; private set; } = [];
 
     public void Parse(string filePath)
     {
@@ -20,7 +20,7 @@ public class MarkdownFileParser : IFileParser
 
         FilePath = filePath;
         var lines = File.ReadAllLines(filePath);
-        ParsedBlock currentBlock = null;
+        ParsedBlock? currentBlock = null;
 
         for (int i = 0; i < lines.Length; i++)
         {

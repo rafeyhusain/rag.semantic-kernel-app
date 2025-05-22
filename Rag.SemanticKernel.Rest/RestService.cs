@@ -3,11 +3,12 @@ using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.CircuitBreaker;
 using Polly.Wrap;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Web;
 
-namespace Rag.SemanticKernel.Core.Sdk.Rest;
+namespace Rag.SemanticKernel.Rest;
 
 public class RestService 
 {
@@ -22,10 +23,10 @@ public class RestService
         _httpClient = httpClient;
         _logger = logger;
 
-        int retryCount = configuration.GetValue<int>("Polly:RetryPolicy:RetryCount", 5);
-        double retryBaseDelay = configuration.GetValue<double>("Polly:RetryPolicy:BaseDelaySeconds", 2.0);
-        int circuitBreakerFailures = configuration.GetValue<int>("Polly:CircuitBreaker:Failures", 5);
-        double circuitBreakerDuration = configuration.GetValue<double>("Polly:CircuitBreaker:DurationMinutes", 1.0);
+        int retryCount = configuration.GetValue("Polly:RetryPolicy:RetryCount", 5);
+        double retryBaseDelay = configuration.GetValue("Polly:RetryPolicy:BaseDelaySeconds", 2.0);
+        int circuitBreakerFailures = configuration.GetValue("Polly:CircuitBreaker:Failures", 5);
+        double circuitBreakerDuration = configuration.GetValue("Polly:CircuitBreaker:DurationMinutes", 1.0);
 
         var retryPolicy = Policy
             .HandleResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
@@ -36,6 +37,11 @@ public class RestService
             .CircuitBreakerAsync(circuitBreakerFailures, TimeSpan.FromMinutes(circuitBreakerDuration));
 
         _policy = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
+    }
+
+    public void SetApiKey(string? apiKey)
+    {
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
     }
 
     public async Task<string> GetAsync<T>(string endpoint, T requestModel)
@@ -61,13 +67,14 @@ public class RestService
         }
     }
 
-    public async Task<string> PostAsync<T>(string endpoint, T requestModel)
+    public async Task<string> PostAsync<T>(string endpoint, T requestModel, CancellationToken cancellationToken = default)
     {
         try
         {
             var json = JsonSerializer.Serialize(requestModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
-            var response = await _policy.ExecuteAsync(() => _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content));
+            var x = _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content);
+            var response = await _policy.ExecuteAsync(() => _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content, cancellationToken));
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
         }

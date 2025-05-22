@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Rag.SemanticKernel.CommandLine;
 using Rag.SemanticKernel.Logger.Extensions;
 using Rag.SemanticKernel.Model.Vector;
 
@@ -18,7 +19,7 @@ internal sealed class Program
             await _app.Init(args);
 
             await _app.GenerateEmbeddings();
-
+            //await _app.Ask("is it environmental issue");
             Console.ReadKey();
         }
         catch (Exception ex)

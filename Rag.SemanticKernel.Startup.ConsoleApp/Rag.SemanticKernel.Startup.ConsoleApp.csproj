@@ -27,6 +27,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Rag.SemanticKernel.AppSettings\Rag.SemanticKernel.AppSettings.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.CommandLine\Rag.SemanticKernel.CommandLine.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Logger.Extensions\Rag.SemanticKernel.Logger.Extensions.csproj" />
 		<ProjectReference Include="..\semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
 	</ItemGroup>
 </Project>

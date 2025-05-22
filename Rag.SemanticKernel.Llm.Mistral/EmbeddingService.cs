@@ -4,6 +4,7 @@ using Microsoft.SemanticKernel;
 using Rag.SemanticKernel.Abstractions.Parser;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Model.Vector;
+using Rag.SemanticKernel.Rest;
 
 namespace Rag.SemanticKernel.Llm.Mistral;
 
@@ -19,8 +20,9 @@ public class EmbeddingService<T, TRecord> : Core.Embedding.EmbeddingService<T, T
         Kernel kernel,
         IVectorStoreRecordCollection<string, TRecord> vectorStoreCollection,
         IFileParser parser,
-        ModelSettings model
-    ) : base(logger, kernel, vectorStoreCollection, parser, model)
+        RestService restService,
+        ModelPairSettings modelSettings
+    ) : base(logger, kernel, vectorStoreCollection, parser, restService, modelSettings)
     {
 
     }

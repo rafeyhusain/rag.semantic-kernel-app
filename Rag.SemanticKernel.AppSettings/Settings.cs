@@ -3,11 +3,11 @@
 public class Settings
 {
     public ElasticsearchSettings Elasticsearch { get; set; } = new();
-    public List<ModelSettings> Models { get; set; } = new();
+    public List<ModelPairSettings> Pairs { get; set; } = [];
     public SerilogSettings Serilog { get; set; } = new();
     public PollySettings Polly { get; set; } = new();
-    public ModelSettings this[string modelName] =>
-        Models.FirstOrDefault(m => m.Name.ToLower() == modelName.ToLower()) ?? throw new KeyNotFoundException($"Model '{modelName}' not found.");
+    public ModelPairSettings this[string modelPair] =>
+        Pairs.FirstOrDefault(m => m.Name.Equals(modelPair, StringComparison.CurrentCultureIgnoreCase)) ?? throw new KeyNotFoundException($"Model '{modelPair}' not found.");
 }
 
 public class ElasticsearchSettings
@@ -30,7 +30,7 @@ public class ElasticsearchSettings
     }
 }
 
-public class ModelSettings
+public class ModelPairSettings
 {
     public string Name { get; set; } = "";
     public string Endpoint { get; set; } = "";
@@ -41,23 +41,23 @@ public class ModelSettings
 
 public class SerilogSettings
 {
-    public List<string> Using { get; set; } = new();
+    public List<string> Using { get; set; } = [];
     public MinimumLevelSettings MinimumLevel { get; set; } = new();
-    public List<WriteToSettings> WriteTo { get; set; } = new();
-    public List<string> Enrich { get; set; } = new();
-    public Dictionary<string, string> Properties { get; set; } = new();
+    public List<WriteToSettings> WriteTo { get; set; } = [];
+    public List<string> Enrich { get; set; } = [];
+    public Dictionary<string, string> Properties { get; set; } = [];
 }
 
 public class MinimumLevelSettings
 {
     public string Default { get; set; } = "";
-    public Dictionary<string, string> Override { get; set; } = new();
+    public Dictionary<string, string> Override { get; set; } = [];
 }
 
 public class WriteToSettings
 {
     public string Name { get; set; } = "";
-    public Dictionary<string, string> Args { get; set; } = new();
+    public Dictionary<string, string> Args { get; set; } = [];
 }
 
 public class PollySettings

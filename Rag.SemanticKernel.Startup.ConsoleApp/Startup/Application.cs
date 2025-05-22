@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rag.SemanticKernel.AppSettings;
+using Rag.SemanticKernel.CommandLine;
 using Rag.SemanticKernel.Startup.ConsoleApp.Events;
 using Serilog;
 using System;
@@ -12,6 +13,8 @@ using System.Threading.Tasks;
 
 public class Application
 {
+    public CommandLineOptions Options { get; private set; } = new();
+
     public event EventHandler<BeforeServiceContainerCreatedEventArgs>? BeforeServiceContainerCreated;
     public event EventHandler<AfterServiceContainerCreatedEventArgs>? AfterServiceContainerCreated;
 
@@ -19,7 +22,9 @@ public class Application
     {
         Log.Information("Starting application");
 
-        ClearLog();
+        Options = new CommandLineOptions(args);
+
+        Logger.Extensions.Log.ClearLog();
 
         var builder = Host.CreateApplicationBuilder(args);
 
@@ -42,11 +47,6 @@ public class Application
             .WriteTo.File(configuration["Log:FileName"] ?? "log.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
-        builder.Services.AddHttpClient("MyApi", client =>
-        {
-            client.BaseAddress = new Uri("https://api.example.com/");
-        });
-
         builder.Services.AddSingleton<IConfiguration>(configuration);
 
         var settings = new Settings();
@@ -56,6 +56,7 @@ public class Application
 
         builder.Services.Configure<Settings>(configuration);
         builder.Services.AddSingleton(_ => settings);
+        builder.Services.AddHttpClient();
 
         var host = builder.Build();
 
@@ -72,22 +73,5 @@ public class Application
     private void OnAfterServiceContainerCreated(IHost host)
     {
         AfterServiceContainerCreated?.Invoke(this, new AfterServiceContainerCreatedEventArgs(host));
-    }
-
-    public void ClearLog()
-    {
-        var logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
-        var today = DateTime.Now.ToString("yyyyMMdd");
-        var logFileName = $"log-{today}.txt";
-        var logFilePath = Path.Combine(logDirectory, logFileName);
-
-        if (File.Exists(logFilePath))
-        {
-            File.WriteAllText(logFilePath, string.Empty);
-        }
-        else
-        {
-            Console.WriteLine($"Log file not found: {logFilePath}");
-        }
     }
 }

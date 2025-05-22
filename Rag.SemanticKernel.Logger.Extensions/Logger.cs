@@ -16,7 +16,7 @@ public static class Log
         logger.LogError(fullMessage);
     }
 
-    public static string GetMessage(Exception ex, string? message)
+    public static string GetMessage(Exception? ex, string? message)
     {
         List<string> messages = [];
         string stackTrace = "";
@@ -37,5 +37,22 @@ public static class Log
         var fullMessage = message + Environment.NewLine + string.Join(Environment.NewLine, messages);
 
         return fullMessage;
+    }
+
+    public static void ClearLog()
+    {
+        var logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
+        var today = DateTime.Now.ToString("yyyyMMdd");
+        var logFileName = $"log-{today}.txt";
+        var logFilePath = Path.Combine(logDirectory, logFileName);
+
+        if (File.Exists(logFilePath))
+        {
+            File.WriteAllText(logFilePath, string.Empty);
+        }
+        else
+        {
+            Console.WriteLine($"Log file not found: {logFilePath}");
+        }
     }
 }

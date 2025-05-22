@@ -6,6 +6,7 @@ using Microsoft.SemanticKernel.TextGeneration;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Guards;
 using Rag.SemanticKernel.Model.Llm.ChatCompletion;
+using Rag.SemanticKernel.Rest;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -18,87 +19,72 @@ namespace Rag.SemanticKernel.Llm.Core.ChatCompletion;
 public class ChatCompletionService : IChatCompletionService, ITextGenerationService
 {
     private readonly ILogger<ChatCompletionService> _logger;
-    private readonly HttpClient _httpClient;
-    private readonly ModelSettings _model;
+    private readonly ModelPairSettings _pairSettings;
     private readonly Kernel _kernel;
+    private readonly RestService _restService;
 
     public ChatCompletionService(
         Kernel kernel, 
-        ILogger<ChatCompletionService> logger, 
-        ModelSettings model
+        ILogger<ChatCompletionService> logger,
+        RestService restService,
+        ModelPairSettings pairSettings
         )
     {
         _kernel = Guard.ThrowIfNull(kernel);
         _logger = Guard.ThrowIfNull(logger);
-        _model = Guard.ThrowIfNull(model);
+        _restService = Guard.ThrowIfNull(restService);
+        _pairSettings = Guard.ThrowIfNull(pairSettings);
 
-        // Initialize HTTP client for  API
-        _httpClient = new HttpClient();
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _model.ApiKey);
+        _restService.BaseUrl = _pairSettings.Endpoint;
+        _restService.SetApiKey(_pairSettings.ApiKey);
     }
 
     public IReadOnlyDictionary<string, object?> Attributes => new Dictionary<string, object?>
     {
-        ["Provider"] = _model.Name,
-        ["Endpoint"] = _model.Endpoint,
-        ["EmbeddingModel"] = _model.CompletionModel,
+        ["Provider"] = _pairSettings.Name,
+        ["Endpoint"] = _pairSettings.Endpoint,
+        ["EmbeddingModel"] = _pairSettings.CompletionModel,
         ["SupportsStreaming"] = true,
         ["SupportsFunctionCalling"] = false,
         ["SupportsEmbeddings"] = true
     };
-
+    
     public async Task<string> Ask(string question, ChatCompletionServiceOptions options)
     {
         try
         {
-            return await AskWithRetry(question, options);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogCritical(ex, "Error in QuestionService.Ask");
-            throw;
-        }
-    }
-
-    public async Task<string> AskWithRetry(string question, ChatCompletionServiceOptions options, int maxRetries = 5)
-    {
-        int delay = 1000;
-        for (int attempt = 0; attempt < maxRetries; attempt++)
-        {
-            try
+            var arguments = new KernelArguments
             {
-                var response = await _kernel.InvokePromptAsync(
-                        promptTemplate: options.Template.Prompt,
-                        arguments: new KernelArguments
-                        {
-                            { "question", question }
-                        },
-                        templateFormat: "handlebars",
-                        promptTemplateFactory: new HandlebarsPromptTemplateFactory());
+                ["input"] = question,
+                ["serviceId"] = _pairSettings.CompletionModel
+            };
 
-                var result = response.ToString();
+            var response = await _kernel.InvokePromptAsync(
+                    promptTemplate: options.Template.Prompt!,
+                    arguments: arguments,
+                    templateFormat: "handlebars",
+                    promptTemplateFactory: new HandlebarsPromptTemplateFactory());
 
-                return result;
-            }
-            catch (HttpRequestException ex) when (ex.Message.Contains("TooManyRequests"))
-            {
-                _logger.LogWarning("Rate limited. Retrying in {Delay}ms (Attempt {Attempt}/{Max})", delay, attempt + 1, maxRetries);
-                await Task.Delay(delay);
-                delay *= 2;
-            }
+            var result = response.ToString();
+
+            return result;
         }
+        catch (HttpRequestException ex) 
+        {
+            _logger.LogError(ex, "Error chatcompletion.ask");
 
-        throw new Exception("Failed to generate embeddings after retries.");
+            return "";
+        }
     }
 
     /// <summary>
     /// Gets chat message contents from the  API
     /// </summary>
-    public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings executionSettings = null, Kernel kernel = null, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyList<ChatMessageContent>> GetChatMessageContentsAsync(ChatHistory chatHistory, PromptExecutionSettings? executionSettings = null, Kernel? kernel = null, CancellationToken cancellationToken = default)
     {
         try
         {
-            _logger.LogDebug("Generating chat completion with model: {Model}", _model.CompletionModel);
+            _logger.LogDebug("Generating chat completion with model: {Model}", _pairSettings.CompletionModel);
 
             // Convert ChatHistory to 's message format
             var messages = new List<object>();
@@ -120,41 +106,32 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
             }
 
             // Create request payload
-            var requestBody = JsonSerializer.Serialize(new
-            {
-                model = _model.CompletionModel,
-                messages,
-                temperature = 0.7,
-                max_tokens = 4096,
-                top_p = 1.0,
-                stream = false
-            });
+            var request = new ChatCompletionRequest
+                (
+                    _pairSettings.CompletionModel,
+                    messages,
+                    0.7,
+                    4096,
+                    1.0,
+                    false
+                );
 
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_model.Endpoint}/chat/completions", content, cancellationToken);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-                throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
-            }
-
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseContent);
+            var response = await _restService.PostAsync($"chat/completions", request, cancellationToken);
+            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(response);
 
             if (completionResponse?.Choices == null || completionResponse.Choices.Count == 0)
             {
-                _logger.LogError("No completion returned from  API");
-                throw new InvalidOperationException("No completion returned from  API");
+                var message = $"No completion returned from {_pairSettings.Endpoint}/chat/completions API";
+                _logger.LogError(message);
+                throw new InvalidOperationException(message);
             }
 
             var result = new List<ChatMessageContent>
             {
-                new ChatMessageContent(
+                new(
                     AuthorRole.Assistant,
                     completionResponse.Choices[0].Message.Content,
-                    metadata: new Dictionary<string, object>
+                    metadata: new Dictionary<string, object?>
                     {
                         ["Usage"] = completionResponse.Usage,
                         ["Model"] = completionResponse.Model,
@@ -178,8 +155,8 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     /// </summary>
     public async IAsyncEnumerable<StreamingChatMessageContent> GetStreamingChatMessageContentsAsync(
         ChatHistory chatHistory,
-        PromptExecutionSettings executionSettings = null,
-        Kernel kernel = null,
+        PromptExecutionSettings? executionSettings = null,
+        Kernel? kernel = null,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await Task.CompletedTask;
@@ -227,7 +204,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //        Content = new StringContent(requestBody, Encoding.UTF8, "application/json")
         //    };
 
-        //    var response = await _httpClient.SendAsync(
+        //    var response = await _restService.SendAsync(
         //        request,
         //        HttpCompletionOption.ResponseHeadersRead,
         //        cancellationToken);
@@ -286,56 +263,54 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     /// </summary>
     public async Task<IReadOnlyList<TextContent>> GetTextContentsAsync(
         string prompt,
-        PromptExecutionSettings executionSettings = null,
-        Kernel kernel = null,
+        PromptExecutionSettings? executionSettings = null,
+        Kernel? kernel = null,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            _logger.LogDebug("Generating text completion with model: {Model}", _model.CompletionModel);
+            _logger.LogDebug("Generating text completion with model: {Model}", _pairSettings.CompletionModel);
 
             // Create a ChatHistory with the prompt as a user message
             var chatHistory = new ChatHistory();
             chatHistory.AddUserMessage(prompt);
 
-            // Use the chat completions endpoint since  mainly works with chat
-            var requestBody = JsonSerializer.Serialize(new
+            var messages = new List<object>
             {
-                model = _model.CompletionModel,
-                messages = new[]
+                new[]
                 {
                     new { role = "user", content = prompt }
-                },
-                temperature = 0.7,
-                max_tokens = 4096,
-                top_p = 1.0,
-                stream = false
-            });
+                }
+            };
 
-            var content = new StringContent(requestBody, Encoding.UTF8, "application/json");
-            var response = await _httpClient.PostAsync($"{_model.Endpoint}/chat/completions", content, cancellationToken);
+            /////////////////
 
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Error from  API: {StatusCode}, {Response}", response.StatusCode, errorContent);
-                throw new HttpRequestException($" API error: {response.StatusCode}, {errorContent}");
-            }
+            // Create request payload
+            var request = new ChatCompletionRequest
+                (
+                    _pairSettings.CompletionModel,
+                    messages,
+                    0.7,
+                    4096,
+                    1.0,
+                    false
+                );
 
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(responseContent);
+            var response = await _restService.PostAsync($"chat/completions", request, cancellationToken);
+            var completionResponse = JsonSerializer.Deserialize<ChatCompletionResponse>(response);
 
             if (completionResponse?.Choices == null || completionResponse.Choices.Count == 0)
             {
-                _logger.LogError("No completion returned from  API");
-                throw new InvalidOperationException("No completion returned from  API");
+                var message = $"No completion returned from {_pairSettings.Endpoint}/chat/completions API";
+                _logger.LogError(message);
+                throw new InvalidOperationException(message);
             }
 
             var result = new List<TextContent>
             {
-                new TextContent(
+                new(
                     completionResponse.Choices[0].Message.Content,
-                    metadata: new Dictionary<string, object>
+                    metadata: new Dictionary<string, object?>
                     {
                         ["Usage"] = completionResponse.Usage,
                         ["Model"] = completionResponse.Model,
@@ -359,8 +334,8 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
     /// </summary>
     public async IAsyncEnumerable<StreamingTextContent> GetStreamingTextContentsAsync(
         string prompt,
-        PromptExecutionSettings executionSettings = null,
-        Kernel kernel = null,
+        PromptExecutionSettings? executionSettings = null,
+        Kernel? kernel = null,
         [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
         await Task.CompletedTask;
@@ -391,7 +366,7 @@ public class ChatCompletionService : IChatCompletionService, ITextGenerationServ
         //        Content = new StringContent(requestBody, Encoding.UTF8, "application/json")
         //    };
 
-        //    var response = await _httpClient.SendAsync(
+        //    var response = await _restService.SendAsync(
         //        request,
         //        HttpCompletionOption.ResponseHeadersRead,
         //        cancellationToken);

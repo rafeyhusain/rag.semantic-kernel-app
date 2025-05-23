@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Rag.SemanticKernel.Guards\Rag.SemanticKernel.Guards.csproj" />
+  </ItemGroup>
+
 </Project>

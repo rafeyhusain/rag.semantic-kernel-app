@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
 using Rag.Connector.Mistral;
+using Rag.LlmRouter;
+using Rag.SemanticKernel.Guards;
 
 #pragma warning disable SKEXP0001 // Some SK methods are still experimental
 
@@ -13,34 +15,26 @@ namespace Rag.SemanticKernel.WebApi.Controllers;
 public class QuestionController : ControllerBase
 {
     private readonly ILogger<QuestionController> _logger;
-    private readonly SemanticService _semanticService;
-    private readonly Kernel _kernel;
-    private readonly VectorStoreTextSearch<Markdown> _searchService;
+    private readonly Router _router;
 
     public QuestionController(
         ILogger<QuestionController> logger,
-        Kernel kernel,
-        VectorStoreTextSearch<Markdown> searchService,
-        SemanticService semanticService)
+        Router router)
     {
-        _kernel = kernel;
-        _searchService = searchService;
-        _logger = logger;
-        _semanticService = semanticService;
-
-        _kernel.Plugins.Add(searchService.CreateWithGetTextSearchResults("SearchPlugin"));
+        _logger = Guard.ThrowIfNull(logger);
+        _router = Guard.ThrowIfNull(router);
     }
 
 
     [HttpPost("ask")]
     public async Task<ActionResult<Model.Api.AskResponse>> Ask([FromBody] Model.Api.AskRequest request)
     {
-        if (string.IsNullOrWhiteSpace(request.Question))
+        if (string.IsNullOrWhiteSpace(request.PairName) || string.IsNullOrWhiteSpace(request.Question))
         {
             return BadRequest("Question cannot be empty.");
         }
 
-        var answer = await _semanticService.AskModel(request.Question);
+        var answer = await _router.AskModel(request);
 
         return Ok(answer);
     }

@@ -2,6 +2,7 @@ POST http://localhost:5119/Question/ask
 Content-Type: application/json
 
 {
+  "pairName": "mistral",
   "question": "det sanna värdet"
 }
 
@@ -11,5 +12,6 @@ POST https://localhost:7233/Question/ask
 Content-Type: application/json
 
 {
+  "pairName": "mistral",
   "question": "det sanna värdet"
 }

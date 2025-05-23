@@ -44,6 +44,11 @@ public class Application
         var settings = new Settings();
         configuration.Bind(settings);
 
+        foreach (var pair in settings.Pairs)
+        {
+            pair.Settings = settings;
+        }
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
@@ -61,7 +66,7 @@ public class Application
 
         var host = builder.Build();
 
-        OnAfterServiceContainerCreated(host); // raise AFTER event
+        OnAfterServiceContainerCreated(host);
 
         await Task.CompletedTask;
     }

@@ -11,4 +11,6 @@ public class SemanticService : Core.Api.SemanticService<Markdown>
         : base(kernel, chatCompletionService, embeddingService)
     {
     }
+
+    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.OpenAi;
 }

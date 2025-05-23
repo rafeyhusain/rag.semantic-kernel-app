@@ -1,4 +1,7 @@
-﻿namespace Rag.LlmRouter;
+﻿using System.Text.Json;
+using Rag.SemanticKernel.Model.Api;
+
+namespace Rag.LlmRouter;
 
 public class Router
 {
@@ -69,4 +72,19 @@ public class Router
 
         return answer;
     }
+
+    public async Task<AskResponse> AskModel(AskRequest request)
+    {
+        var answerText = await Ask(request.PairName, request.Question);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        var answer = JsonSerializer.Deserialize<AskResponse>(answerText, options)!;
+
+        return answer;
+    }
+
 }

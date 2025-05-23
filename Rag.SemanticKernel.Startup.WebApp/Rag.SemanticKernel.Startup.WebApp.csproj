@@ -1,13 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
+		<PropertyGroup>
 		<TargetFramework>net9.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
 
+
 	<ItemGroup>
 		<PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.16.2" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
 		<PackageReference Include="Microsoft.Build.CopyOnWrite" Version="1.0.334">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -26,7 +28,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<ProjectReference Include="..\Rag.LlmRouter\Rag.LlmRouter.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.AppSettings\Rag.SemanticKernel.AppSettings.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.CommandLine\Rag.SemanticKernel.CommandLine.csproj" />
+		<ProjectReference Include="..\Rag.SemanticKernel.Logger.Extensions\Rag.SemanticKernel.Logger.Extensions.csproj" />
 		<ProjectReference Include="..\semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
 	</ItemGroup>
 </Project>

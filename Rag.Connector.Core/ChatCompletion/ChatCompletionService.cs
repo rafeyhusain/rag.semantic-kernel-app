@@ -22,7 +22,7 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
     where TRecord : class
 {
     private readonly ILogger<ChatCompletionService<TRecord>> _logger;
-    private readonly ModelPairSettings _pairSettings;
+    protected ModelPairSettings _pairSettings;
     private readonly Kernel _kernel;
     private readonly RestService _restService;
     private readonly VectorStoreTextSearch<TRecord> _searchService;
@@ -42,6 +42,24 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
         _searchService = Guard.ThrowIfNull(searchService);
 
         KernelPluginInjector<TRecord>.InjectPlugins(_kernel, _searchService);
+    }
+
+    public virtual string PairName => "";
+
+    public void RefreshModelPair()
+    {
+        if (_pairSettings.Settings != null)
+        {
+            if (!string.IsNullOrEmpty(_pairSettings.Settings.CurrentPairName))
+            {
+                _pairSettings = _pairSettings.Settings.CurrentPairSetting;
+
+            }
+            else if (!string.IsNullOrEmpty(PairName))
+            {
+                _pairSettings = _pairSettings.Settings[PairName];
+            }
+        }
 
         _restService.BaseUrl = _pairSettings.Endpoint;
         _restService.SetApiKey(_pairSettings.ApiKey);
@@ -56,7 +74,7 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
         ["SupportsFunctionCalling"] = false,
         ["SupportsEmbeddings"] = true
     };
-    
+
     public async Task<string> Ask(string question, ChatCompletionServiceOptions options)
     {
         try
@@ -91,6 +109,8 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
         try
         {
             _logger.LogDebug("Generating chat completion with model: {Model}", _pairSettings.CompletionModel);
+
+            RefreshModelPair();
 
             // Convert ChatHistory to 's message format
             var messages = new List<object>();

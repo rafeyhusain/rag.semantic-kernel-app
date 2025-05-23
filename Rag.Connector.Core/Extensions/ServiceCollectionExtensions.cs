@@ -1,6 +1,7 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
@@ -11,6 +12,7 @@ using Rag.Connector.Core.Embedding;
 using Rag.Connector.Core.Plugins;
 using Rag.SemanticKernel.Abstractions.Parser;
 using Rag.SemanticKernel.AppSettings;
+using Rag.SemanticKernel.Parser.Markdown;
 using Rag.SemanticKernel.Rest;
 
 namespace Rag.Connector.Core.Extensions;
@@ -18,7 +20,7 @@ namespace Rag.Connector.Core.Extensions;
 /// <summary>
 /// Extension methods for registering semantic services based on a configurable pairSettings and generic document type.
 /// </summary>
-public static class SemanticServiceExtensions
+public static class ServiceCollectionExtensions
 {
     /// <summary>
     /// Registers semantic services for the given pairSettings name and document type.
@@ -31,10 +33,18 @@ public static class SemanticServiceExtensions
 
         var kernelBuilder = services.AddKernel();
 
-        // Model-specific registration
+        // scoped
         kernelBuilder.Services.AddTransient<ITextEmbeddingGenerationService, EmbeddingService<TRecord>>();
         kernelBuilder.Services.AddTransient<IChatCompletionService, ChatCompletionService<TRecord>>();
         kernelBuilder.Services.AddTransient<ITextGenerationService, ChatCompletionService<TRecord>>();
+        
+        services.AddTransient<IFileParser, P>();
+        services.AddTransient<VectorStoreTextSearch<TRecord>>();
+        services.AddTransient<ModelPairSettings>();
+        services.AddTransient<RestService>();
+
+        // singleton
+        services.AddSingleton<KernelPluginInjector<TRecord>>();
 
         // Register vector search for the specified document type
         kernelBuilder.AddVectorStoreTextSearch<TRecord>();
@@ -44,13 +54,5 @@ public static class SemanticServiceExtensions
             .Authentication(new BasicAuthentication(settings.Elasticsearch.User, settings.Elasticsearch.Password));
 
         kernelBuilder.AddElasticsearchVectorStoreRecordCollection<string, TRecord>(settings.Elasticsearch[pairSettings.Name], elasticSettings);
-
-        // Register dependent services
-        services.AddTransient<IFileParser, P>();
-        services.AddTransient<RestService>();
-
-        services.AddTransient<VectorStoreTextSearch<TRecord>>();
-        services.AddTransient<KernelPluginInjector<TRecord>>();
-        services.AddTransient<ModelPairSettings>(_ => settings[modelPair]);
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
+using Rag.SemanticKernel.Abstractions.LlmModel;
 using Rag.SemanticKernel.AppSettings;
 using Rag.SemanticKernel.Rest;
 
@@ -19,5 +20,9 @@ public class ChatCompletionService : Core.ChatCompletion.ChatCompletionService<M
         VectorStoreTextSearch<Markdown> searchService,
         ModelPairSettings pairSettings) : base(kernel, logger, restService, searchService, pairSettings)
     {
+        RefreshModelPair();
     }
+
+    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.Mistral;
+
 }

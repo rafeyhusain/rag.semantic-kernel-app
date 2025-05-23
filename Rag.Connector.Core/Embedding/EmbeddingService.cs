@@ -22,7 +22,7 @@ public class EmbeddingService<TRecord> : ITextEmbeddingGenerationService
     protected readonly IVectorStoreRecordCollection<string, TRecord> _vectorStoreCollection;
     protected readonly IFileParser _parser;
     protected readonly Kernel _kernel;
-    protected readonly ModelPairSettings _pairSettings;
+    protected ModelPairSettings _pairSettings;
     protected readonly RestService _restService;
 
     public EmbeddingService(
@@ -39,6 +39,26 @@ public class EmbeddingService<TRecord> : ITextEmbeddingGenerationService
         _parser = Guard.ThrowIfNull(parser);
         _pairSettings = Guard.ThrowIfNull(pairSettings);
         _restService = Guard.ThrowIfNull(restService);
+
+        RefreshModelPair();
+    }
+
+    public virtual string PairName => "";
+
+    public void RefreshModelPair()
+    {
+        if (_pairSettings.Settings != null)
+        {
+            if (!string.IsNullOrEmpty(_pairSettings.Settings.CurrentPairName))
+            {
+                _pairSettings = _pairSettings.Settings.CurrentPairSetting;
+
+            }
+            else if (!string.IsNullOrEmpty(PairName))
+            {
+                _pairSettings = _pairSettings.Settings[PairName];
+            }
+        }
 
         _restService.BaseUrl = _pairSettings.Endpoint;
         _restService.SetApiKey(_pairSettings.ApiKey);
@@ -147,6 +167,8 @@ public class EmbeddingService<TRecord> : ITextEmbeddingGenerationService
         {
             _logger.LogDebug("Generating embeddings for {Count} items", data.Count);
 
+            RefreshModelPair();
+
             var request = new EmbeddingRequest(_pairSettings.EmbeddingModel, data);
             var response = await _restService.PostAsync($"embeddings", request);
             var embeddingResponse = JsonSerializer.Deserialize<EmbeddingResponse>(response);
@@ -164,7 +186,7 @@ public class EmbeddingService<TRecord> : ITextEmbeddingGenerationService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error generating embeddings");
+            _logger.LogError(ex, $"Error generating embeddings [{_pairSettings.EmbeddingModel}] - {_pairSettings.Endpoint}");
             throw;
         }
     }

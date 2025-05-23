@@ -21,8 +21,10 @@ public class EmbeddingService : Core.Embedding.EmbeddingService<Markdown>
         ModelPairSettings modelSettings
     ) : base(logger, kernel, vectorStoreCollection, parser, restService, modelSettings)
     {
+        RefreshModelPair();
     }
     
+    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.OpenAi;
     protected override async Task UpsertAsync(
     string id,
     string fileName,

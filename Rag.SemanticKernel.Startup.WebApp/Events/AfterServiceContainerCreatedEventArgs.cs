@@ -1,4 +1,4 @@
-﻿namespace Rag.SemanticKernel.Startup.ConsoleApp.Events;
+﻿namespace Rag.SemanticKernel.Startup.WebApp.Events;
 using Microsoft.Extensions.Hosting;
 using System;
 

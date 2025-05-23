@@ -3,8 +3,8 @@
 public class Llm
 {
     public const string Mistral = "Mistral";
-    public const string OpenAI = "OpenAI";
-    public const string AzureOpenAI = "AzureOpenAI";
+    public const string OpenAi = "OpenAI";
+    public const string AzureOpenAIi= "AzureOpenAI";
     public const string Cohere = "Cohere";
     public const string Anthropic = "Anthropic";
     public const string Google = "Google";

@@ -1,4 +1,4 @@
-﻿namespace Rag.SemanticKernel.Startup.ConsoleApp.Events;
+﻿namespace Rag.SemanticKernel.Startup.WebApp.Events;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -7,10 +7,10 @@ using System;
 
 public class BeforeServiceContainerCreatedEventArgs : EventArgs
 {
-    public HostApplicationBuilder Builder { get; }
+    public WebApplicationBuilder Builder { get; }
     public Settings Settings { get; }    
 
-    public BeforeServiceContainerCreatedEventArgs(HostApplicationBuilder builder, Settings settings)
+    public BeforeServiceContainerCreatedEventArgs(WebApplicationBuilder builder, Settings settings)
     {
         Builder = builder;
         Settings = settings;

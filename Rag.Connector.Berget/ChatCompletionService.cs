@@ -19,5 +19,8 @@ public class ChatCompletionService : Core.ChatCompletion.ChatCompletionService<M
         VectorStoreTextSearch<Markdown> searchService,
         ModelPairSettings pairSettings) : base(kernel, logger, restService, searchService, pairSettings)
     {
+        RefreshModelPair();
     }
+
+    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.Berget;
 }

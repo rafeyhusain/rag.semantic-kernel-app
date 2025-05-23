@@ -24,6 +24,8 @@ public class SemanticService<TRecord>
         _embeddingService = Guard.ThrowIfNull(embeddingService);
     }
 
+    public virtual string PairName => "";
+
     public async Task<AskResponse> AskModel(string question)
     {
         var answerText = await Ask(question);

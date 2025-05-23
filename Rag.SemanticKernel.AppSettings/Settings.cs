@@ -1,13 +1,26 @@
-﻿namespace Rag.SemanticKernel.AppSettings;
+﻿using Rag.SemanticKernel.Guards;
+
+namespace Rag.SemanticKernel.AppSettings;
 
 public class Settings
 {
+    public string CurrentPairName { get; set; } = "";
+    public ModelPairSettings CurrentPairSetting => string.IsNullOrEmpty(CurrentPairName) ? new ModelPairSettings(this) : this[CurrentPairName];
     public ElasticsearchSettings Elasticsearch { get; set; } = new();
     public List<ModelPairSettings> Pairs { get; set; } = [];
     public SerilogSettings Serilog { get; set; } = new();
     public PollySettings Polly { get; set; } = new();
-    public ModelPairSettings this[string modelPair] =>
-        Pairs.FirstOrDefault(m => m.Name.Equals(modelPair, StringComparison.CurrentCultureIgnoreCase)) ?? throw new KeyNotFoundException($"Model '{modelPair}' not found.");
+    public ModelPairSettings this[string modelPair]
+    {
+        get
+        {
+            var pair = Pairs.FirstOrDefault(m => m.Name.Equals(modelPair, StringComparison.CurrentCultureIgnoreCase)) ?? throw new KeyNotFoundException($"Model '{modelPair}' not found.");
+
+            pair.Settings = this;
+
+            return pair;
+        }
+    }
 }
 
 public class ElasticsearchSettings
@@ -32,11 +45,31 @@ public class ElasticsearchSettings
 
 public class ModelPairSettings
 {
+    public ModelPairSettings() { }
+
+    public ModelPairSettings(Settings settings)
+    {
+        Settings = settings;
+    }
+
     public string Name { get; set; } = "";
     public string Endpoint { get; set; } = "";
     public string ApiKey { get; set; } = "";
     public string CompletionModel { get; set; } = "";
     public string EmbeddingModel { get; set; } = "";
+    public Settings Settings { get; set; }
+
+    public void Set(ModelPairSettings pairSettings)
+    {
+        Guard.ThrowIfNull(pairSettings);
+
+        Name = pairSettings.Name;
+        Endpoint = pairSettings.Endpoint;
+        ApiKey = pairSettings.ApiKey;
+        CompletionModel = pairSettings.CompletionModel;
+        EmbeddingModel = pairSettings.EmbeddingModel;
+        Settings = pairSettings.Settings;
+    }
 }
 
 public class SerilogSettings

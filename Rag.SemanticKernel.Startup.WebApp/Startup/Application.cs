@@ -1,10 +1,12 @@
-﻿namespace Rag.SemanticKernel.Startup.ConsoleApp.Startup;
+﻿namespace Rag.SemanticKernel.Startup.WebApp.Startup;
 
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Startup.ConsoleApp.Events;
+using Rag.SemanticKernel.CommandLine;
+using Rag.SemanticKernel.Startup.WebApp.Events;
 using Serilog;
 using System;
 using System.IO;
@@ -12,16 +14,19 @@ using System.Threading.Tasks;
 
 public class Application
 {
+    public CommandLineOptions Options { get; private set; } = new();
+
     public event EventHandler<BeforeServiceContainerCreatedEventArgs>? BeforeServiceContainerCreated;
     public event EventHandler<AfterServiceContainerCreatedEventArgs>? AfterServiceContainerCreated;
 
     public virtual async Task Init(string[] args)
     {
-        Log.Information("Starting application");
+        Options = new CommandLineOptions(args);
+        Log.Information($"Starting application with pair[{Options.PairName}]");
 
-        ClearLog();
+        Logger.Extensions.Log.ClearLog();
 
-        var builder = Host.CreateApplicationBuilder(args);
+        var builder = WebApplication.CreateBuilder(args);
 
         var env = builder.Environment;
 
@@ -35,6 +40,14 @@ public class Application
             .AddEnvironmentVariables()
             .Build();
 
+        var settings = new Settings();
+        configuration.Bind(settings);
+
+        foreach (var pair in settings.Pairs)
+        {
+            pair.Settings = settings;
+        }
+
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
             .Enrich.FromLogContext()
@@ -42,29 +55,38 @@ public class Application
             .WriteTo.File(configuration["Log:FileName"] ?? "log.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
-        builder.Services.AddHttpClient("MyApi", client =>
-        {
-            client.BaseAddress = new Uri("https://api.example.com/");
-        });
-
         builder.Services.AddSingleton<IConfiguration>(configuration);
 
-        var settings = new Settings();
-        configuration.Bind(settings); 
-
-        OnBeforeServiceContainerCreated(builder, settings); 
+        OnBeforeServiceContainerCreated(builder, settings);
 
         builder.Services.Configure<Settings>(configuration);
         builder.Services.AddSingleton(_ => settings);
+        builder.Services.AddHttpClient();
+
+        builder.Services.AddControllers();
+        builder.Services.AddOpenApi();
 
         var host = builder.Build();
 
-        OnAfterServiceContainerCreated(host); // raise AFTER event
+        if (host.Environment.IsDevelopment())
+        {
+            host.MapOpenApi();
+        }
+
+        host.UseHttpsRedirection();
+
+        host.UseAuthorization();
+
+        host.MapControllers();
+
+        OnAfterServiceContainerCreated(host);
+
+        host.Run();
 
         await Task.CompletedTask;
     }
 
-    private void OnBeforeServiceContainerCreated(HostApplicationBuilder builder, Settings settings)
+    private void OnBeforeServiceContainerCreated(WebApplicationBuilder builder, Settings settings)
     {
         BeforeServiceContainerCreated?.Invoke(this, new BeforeServiceContainerCreatedEventArgs(builder, settings));
     }
@@ -73,21 +95,5 @@ public class Application
     {
         AfterServiceContainerCreated?.Invoke(this, new AfterServiceContainerCreatedEventArgs(host));
     }
-
-    public void ClearLog()
-    {
-        var logDirectory = Path.Combine(AppContext.BaseDirectory, "logs");
-        var today = DateTime.Now.ToString("yyyyMMdd");
-        var logFileName = $"log-{today}.txt";
-        var logFilePath = Path.Combine(logDirectory, logFileName);
-
-        if (File.Exists(logFilePath))
-        {
-            File.WriteAllText(logFilePath, string.Empty);
-        }
-        else
-        {
-            Console.WriteLine($"Log file not found: {logFilePath}");
-        }
-    }
 }
+

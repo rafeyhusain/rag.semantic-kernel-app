@@ -79,6 +79,8 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
     {
         try
         {
+            _pairSettings.Settings.CurrentPairName = PairName; // This will help SK DI
+
             var arguments = new KernelArguments
             {
                 ["question"] = question

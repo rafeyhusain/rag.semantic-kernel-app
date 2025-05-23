@@ -2,8 +2,8 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Rest;
+using Rag.AppSettings;
+using Rag.Rest;
 
 namespace Rag.Connector.Scaleway;
 
@@ -22,5 +22,5 @@ public class ChatCompletionService : Core.ChatCompletion.ChatCompletionService<M
         RefreshModelPair();
     }
 
-    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.Scaleway;
+    public override string PairName => Abstractions.Pairs.ModelPairs.Scaleway;
 }

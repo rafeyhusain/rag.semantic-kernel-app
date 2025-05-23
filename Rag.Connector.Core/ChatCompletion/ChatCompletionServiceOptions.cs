@@ -1,4 +1,4 @@
-﻿using Rag.SemanticKernel.Template.Handlebar;
+﻿using Rag.Template.Handlebar;
 
 namespace Rag.Connector.Core.ChatCompletion;
 

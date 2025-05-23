@@ -1,6 +1,26 @@
 # Rag.Connector.Scaleway
 
-This project provides integration with Scaleway AI's language models for the Semantic Kernel framework. It includes services for chat completions, embeddings, and question answering capabilities.
+This folder contains Scaleway-specific connector implementations for the RAG system.
+
+## Purpose
+
+The Rag.Connector.Scaleway project provides:
+- Scaleway API integration
+- Scaleway-specific authentication
+- Scaleway resource management
+- Scaleway-specific error handling
+
+## Key Components
+
+- Scaleway API connectors
+- Authentication handlers
+- Resource management utilities
+- Scaleway-specific configuration
+- Error handling for Scaleway services
+
+## Usage
+
+This project should be referenced by applications that need to interact with Scaleway services. It provides a structured way to connect to and use Scaleway services within the RAG system.
 
 ## Features
 
@@ -14,14 +34,6 @@ This project provides integration with Scaleway AI's language models for the Sem
 The services can be configured through the following options:
 - `QuestionServiceOptions`
 - `EmbeddingGeneratorServiceOptions`
-
-## Usage
-
-Add the following to your service collection:
-
-```csharp
-services.AddScalewayServices(configuration);
-```
 
 ## Dependencies
 

@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using Rag.SemanticKernel.Model.Api;
+using Rag.Model.Api;
 
 namespace Rag.LlmRouter;
 

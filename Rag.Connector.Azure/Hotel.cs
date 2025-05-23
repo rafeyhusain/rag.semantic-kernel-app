@@ -2,7 +2,7 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
 
-namespace Rag.SemanticKernel.Core.Sdk.Service.Azure;
+namespace Rag.Core.Sdk.Service.Azure;
 
 public sealed record Markdown
 {

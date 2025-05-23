@@ -12,5 +12,5 @@ public class SemanticService : Core.Api.SemanticService<Markdown>
     {
     }
 
-    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.OpenAi;
+    public override string PairName => Abstractions.Pairs.ModelPairs.OpenAi;
 }

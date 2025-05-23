@@ -2,9 +2,9 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.SemanticKernel.Abstractions.LlmModel;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Rest;
+using Rag.Abstractions.LlmModel;
+using Rag.AppSettings;
+using Rag.Rest;
 
 namespace Rag.Connector.Mistral;
 
@@ -23,6 +23,6 @@ public class ChatCompletionService : Core.ChatCompletion.ChatCompletionService<M
         RefreshModelPair();
     }
 
-    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.Mistral;
+    public override string PairName => Abstractions.Pairs.ModelPairs.Mistral;
 
 }

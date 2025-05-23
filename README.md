@@ -4,14 +4,19 @@ Dotnet C# application with Semantic Memory framework and Elasticsearch as vector
 
 ## Details
 
-Here are the details of Dotnet application in C# with Semantic Memory framework and Elasticsearch as vector storage:
+This is a .Net Console App and Web API. It uses Microsoft Semantic Kernel framework and Elasticsearch as vector storage.
 
-- Dotnet application with Semantic Kernel framework
-- Elasticsearch setup
-- Read Markdown files from directory
-- Parse headers in Markdown content and convert to chunks for the embedding
-- Generate embeddings with Mistral [mistral-embed](https://docs.mistral.ai/capabilities/embeddings/) and store in Elasticsearch index
-- API endpoint to get answer using [mistral api](https://api.mistral.ai/v1) and citations from prompt input
+### Console App
+
+- The Console App reads Markdown files from `input` directory.
+- Parse headers in Markdown content and convert to chunks for the embedding using models.
+- It generate embeddings with [mistral](https://docs.mistral.ai/capabilities/embeddings/) and other models 
+- The embeddings are  stored in Elasticsearch indexes
+
+### Web API
+
+- Web API endpoint `/ask` can be used to get answer using [mistral](https://api.mistral.ai/v1) and other models
+- It provides citations from prompt input
 
 ## Setup Guide
 
@@ -19,11 +24,11 @@ Here are the details of Dotnet application in C# with Semantic Memory framework 
 
 ## Generate Embeddings
 
-- See [Generate Embeddings](./Rag.SemanticKernel.App/README.md)
+- See [Generate Embeddings](./Rag.App/README.md)
 
 ## Run Web API
 
-- See [Run Web API](./Rag.SemanticKernel.WebApi/README.md)
+- See [Run Web API](./Rag.WebApi/README.md)
 
 ## Semantic Kernel Notes
 
@@ -31,42 +36,27 @@ See pre-release fix notes at [semantic-kernel-net notes](./semantic-kernel-net/N
 
 ## Folders
 
-| Folder                                                   | Purpose                                                                    |
-| -------------------------------------------------------- | -------------------------------------------------------------------------- |
-| [Rag.SemanticKernel.App](./Rag.SemanticKernel.App)       | Main console application that implements the semantic search functionality |
-| [Rag.SemanticKernel.Core](./Rag.SemanticKernel.Core)     | Core library containing shared business logic and models                   |
-| [Rag.SemanticKernel.WebApi](./Rag.SemanticKernel.WebApi) | Web API project exposing the semantic search functionality                 |
-| [ElasticSearch](./ElasticSearch)                         | Contains Docker configuration and setup instructions for Elasticsearch     |
-| [semantic-kernel-net](./semantic-kernel-net)             | Contains the Elasticsearch connector implementation for Semantic Kernel    |
-| [docs](./docs)                                           | Project documentation and additional resources                             |
-
-## Settings
-
-| Name                                 | Purpose                                   | Example Value             |
-| ------------------------------------ | ----------------------------------------- | ------------------------- |
-| Elasticsearch.Url                    | URL of the Elasticsearch server           | http://localhost:9200     |
-| Elasticsearch.User                   | Username for Elasticsearch authentication | ""                        |
-| Elasticsearch.Password               | Password for Elasticsearch authentication | ""                        |
-| Elasticsearch.Index                  | Name of the Elasticsearch index to use    | hotels                    |
-| Mistral.Endpoint                     | Mistral AI API endpoint                   | https://api.mistral.ai/v1 |
-| Mistral.ApiKey                       | API key for Mistral AI authentication     | absed3                    |
-| Mistral.EmbeddingModel               | Model to use for generating embeddings    | mistral-embed             |
-| Mistral.CompletionModel              | Model to use for text completion          | mistral-large-latest      |
-| Serilog.MinimumLevel.Default         | Default minimum logging level             | Debug                     |
-| Serilog.WriteTo.File.path            | Path for log file output                  | logs/log-.txt             |
-| Serilog.WriteTo.File.rollingInterval | How often to create new log files         | Day                       |
-| Serilog.Properties.Application       | Application name for logging              | RagSemanticKernel         |
-
-## Logs
-
-The application uses `Serilog` for logging with the following configuration:
-
-- Log files are stored in the `logs` directory with the naming pattern `log-YYYYMMDD.txt`
-- Logs are rolled over daily
-- Log level is set to Debug by default
-- Logs include timestamp, log level, message, and exception details
-- Console output is also enabled with a simplified format
-- Logs are enriched with machine name and thread ID
-- Application name is set to "RagSemanticKernel"
-
-The log file path is configured in `appsettings.json` under the `Serilog` section.
+| No  | Folder                                                                             | Purpose                                             |
+| --- | ---------------------------------------------------------------------------------- | --------------------------------------------------- |
+| 1   | [Rag.Abstractions](./Rag.Abstractions/README.md)                                   | Core abstractions and interfaces for the RAG system |
+| 2   | [Rag.AppSettings](./Rag.AppSettings/README.md)                                     | Application settings and configuration management   |
+| 3   | [Rag.CommandLine](./Rag.CommandLine/README.md)                                     | Command-line interface and argument parsing         |
+| 4   | [Rag.ConsoleApp.EmbeddingGenerator](./Rag.ConsoleApp.EmbeddingGenerator/README.md) | Console application for generating embeddings       |
+| 5   | [Rag.Connector.Azure](./Rag.Connector.Azure/README.md)                             | Azure-specific connector implementations            |
+| 6   | [Rag.Connector.Berget](./Rag.Connector.Berget/README.md)                           | Berget-specific connector implementations           |
+| 7   | [Rag.Connector.Core](./Rag.Connector.Core/README.md)                               | Core connector functionality and base classes       |
+| 8   | [Rag.Connector.Mistral](./Rag.Connector.Mistral/README.md)                         | Mistral AI connector implementation                 |
+| 9   | [Rag.Connector.OpenAi](./Rag.Connector.OpenAi/README.md)                           | OpenAI connector implementation                     |
+| 10  | [Rag.Connector.Scaleway](./Rag.Connector.Scaleway/README.md)                       | Scaleway-specific connector implementations         |
+| 11  | [Rag.Guards](./Rag.Guards/README.md)                                               | Input validation and guard clauses                  |
+| 12  | [Rag.Llm.Core](./Rag.Llm.Core/README.md)                                           | Core LLM functionality and abstractions             |
+| 13  | [Rag.Llm.Mistral](./Rag.Llm.Mistral/README.md)                                     | Mistral AI LLM implementation                       |
+| 14  | [Rag.LlmRouter](./Rag.LlmRouter/README.md)                                         | LLM routing and selection logic                     |
+| 15  | [Rag.Logger.Extensions](./Rag.Logger.Extensions/README.md)                         | Logging extensions and utilities                    |
+| 16  | [Rag.Model](./Rag.Model/README.md)                                                 | Data models and DTOs                                |
+| 17  | [Rag.Parser.Markdown](./Rag.Parser.Markdown/README.md)                             | Markdown parsing and processing                     |
+| 18  | [Rag.Rest](./Rag.Rest/README.md)                                                   | REST API implementations                            |
+| 19  | [Rag.Startup.ConsoleApp](./Rag.Startup.ConsoleApp/README.md)                       | Console application startup configuration           |
+| 20  | [Rag.Startup.WebApp](./Rag.Startup.WebApp/README.md)                               | Web application startup configuration               |
+| 21  | [Rag.Template.Handlebar](./Rag.Template.Handlebar/README.md)                       | Handlebars template processing                      |
+| 22  | [Rag.WebApi](./Rag.WebApi/README.md)                                               | Web API implementation                              |

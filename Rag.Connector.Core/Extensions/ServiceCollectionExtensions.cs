@@ -10,10 +10,10 @@ using Microsoft.SemanticKernel.TextGeneration;
 using Rag.Connector.Core.ChatCompletion;
 using Rag.Connector.Core.Embedding;
 using Rag.Connector.Core.Plugins;
-using Rag.SemanticKernel.Abstractions.Parser;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Parser.Markdown;
-using Rag.SemanticKernel.Rest;
+using Rag.Abstractions.Parser;
+using Rag.AppSettings;
+using Rag.Parser.Markdown;
+using Rag.Rest;
 
 namespace Rag.Connector.Core.Extensions;
 

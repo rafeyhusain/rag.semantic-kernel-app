@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.SemanticKernel.Core.Sdk.Service.Azure;
+using Rag.Core.Sdk.Service.Azure;
 
 namespace Rag.Connector.Azure;
 

@@ -12,8 +12,8 @@
     <ProjectReference Include="..\Rag.Connector.Mistral\Rag.Connector.Mistral.csproj" />
     <ProjectReference Include="..\Rag.Connector.OpenAi\Rag.Connector.OpenAi.csproj" />
     <ProjectReference Include="..\Rag.Connector.Scaleway\Rag.Connector.Scaleway.csproj" />
-    <ProjectReference Include="..\Rag.SemanticKernel.Model\Rag.SemanticKernel.Model.csproj" />
-    <ProjectReference Include="..\Rag.SemanticKernel.Parser.Markdown\Rag.SemanticKernel.Parser.Markdown.csproj" />
+    <ProjectReference Include="..\Rag.Model\Rag.Model.csproj" />
+    <ProjectReference Include="..\Rag.Parser.Markdown\Rag.Parser.Markdown.csproj" />
   </ItemGroup>
 
 </Project>

@@ -15,11 +15,11 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Rag.Connector.Core\Rag.Connector.Core.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Abstractions\Rag.SemanticKernel.Abstractions.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.AppSettings\Rag.SemanticKernel.AppSettings.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Guards\Rag.SemanticKernel.Guards.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Rest\Rag.SemanticKernel.Rest.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Template.Handlebar\Rag.SemanticKernel.Template.Handlebar.csproj" />
+		<ProjectReference Include="..\Rag.Abstractions\Rag.Abstractions.csproj" />
+		<ProjectReference Include="..\Rag.AppSettings\Rag.AppSettings.csproj" />
+		<ProjectReference Include="..\Rag.Guards\Rag.Guards.csproj" />
+		<ProjectReference Include="..\Rag.Rest\Rag.Rest.csproj" />
+		<ProjectReference Include="..\Rag.Template.Handlebar\Rag.Template.Handlebar.csproj" />
 		<ProjectReference Include="..\semantic-kernel-net\Elastic.SemanticKernel.Connectors.Elasticsearch\Elastic.SemanticKernel.Connectors.Elasticsearch.csproj" />
 	</ItemGroup>
 </Project>

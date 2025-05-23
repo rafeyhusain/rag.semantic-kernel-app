@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Rag.Connector.Core.Extensions;
-using Rag.SemanticKernel.Abstractions.Pairs;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Parser.Markdown;
+using Rag.Abstractions.Pairs;
+using Rag.AppSettings;
+using Rag.Parser.Markdown;
 
 namespace Rag.LlmRouter.Extensions;
 

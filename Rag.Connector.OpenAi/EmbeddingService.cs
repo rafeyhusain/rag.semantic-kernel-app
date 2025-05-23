@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
-using Rag.SemanticKernel.Abstractions.Parser;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Rest;
+using Rag.Abstractions.Parser;
+using Rag.AppSettings;
+using Rag.Rest;
 
 namespace Rag.Connector.OpenAi;
 
@@ -24,7 +24,7 @@ public class EmbeddingService : Core.Embedding.EmbeddingService<Markdown>
         RefreshModelPair();
     }
     
-    public override string PairName => SemanticKernel.Abstractions.Pairs.ModelPairs.OpenAi;
+    public override string PairName => Abstractions.Pairs.ModelPairs.OpenAi;
     protected override async Task UpsertAsync(
     string id,
     string fileName,

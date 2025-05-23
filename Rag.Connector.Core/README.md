@@ -1,6 +1,26 @@
 # Rag.Connector.Core
 
-This project provides core LLM (Large Language Model) functionality for the Semantic Kernel application. It includes base implementations for chat completions, embeddings, and plugins.
+This folder contains the core connector functionality and base classes for the RAG system.
+
+## Purpose
+
+The Rag.Connector.Core project provides:
+- Base connector interfaces and abstract classes
+- Common connector functionality
+- Shared utilities and helpers
+- Core connector types and models
+
+## Key Components
+
+- Base connector interfaces
+- Abstract connector classes
+- Common connector utilities
+- Shared configuration models
+- Error handling base classes
+
+## Usage
+
+This project should be referenced by all connector implementations. It provides the foundation and common functionality that all connectors should implement and use.
 
 ## Structure
 
@@ -15,11 +35,6 @@ This project provides core LLM (Large Language Model) functionality for the Sema
 - Core chat completion functionality
 - Embedding generation capabilities
 - Plugin system foundation
-
-## Usage
-
-This project serves as the foundation for LLM-related functionality in the Semantic Kernel application. 
-Other LLM-specific projects (like Azure and Mistral) build upon these core implementations.
 
 ## Dependencies
 

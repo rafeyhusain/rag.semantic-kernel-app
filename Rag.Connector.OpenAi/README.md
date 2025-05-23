@@ -1,29 +1,23 @@
-# Rag.Connector.Mistral
+# Rag.Connector.OpenAi
 
-This project provides integration with Mistral AI's language models for the Semantic Kernel framework. It includes services for chat completions, embeddings, and question answering capabilities.
+This folder contains the OpenAI connector implementation for the RAG system.
 
-## Features
+## Purpose
 
-- Chat completion service for text generation
-- Embedding generation for vector representations
-- Question answering service
-- Semantic service extensions for easy integration
+The Rag.Connector.OpenAi project provides:
+- OpenAI API integration
+- OpenAI-specific authentication
+- OpenAI model management
+- OpenAI-specific error handling
 
-## Configuration
+## Key Components
 
-The services can be configured through the following options:
-- `QuestionServiceOptions`
-- `EmbeddingGeneratorServiceOptions`
+- OpenAI API connectors
+- Authentication handlers
+- Model management utilities
+- OpenAI-specific configuration
+- Error handling for OpenAI services
 
 ## Usage
 
-Add the following to your service collection:
-
-```csharp
-services.AddMistralServices(configuration);
-```
-
-## Dependencies
-
-- Microsoft.SemanticKernel
-- Mistral AI API client 
+This project should be referenced by applications that need to interact with OpenAI services. It provides a structured way to connect to and use OpenAI services within the RAG system. 

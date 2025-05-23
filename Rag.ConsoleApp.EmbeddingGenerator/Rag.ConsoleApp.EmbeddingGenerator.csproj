@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPublishable>true</IsPublishable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Rag.Connector.Azure\Rag.Connector.Azure.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Berget\Rag.Connector.Berget.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Core\Rag.Connector.Core.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Mistral\Rag.Connector.Mistral.csproj" />
+    <ProjectReference Include="..\Rag.Connector.OpenAi\Rag.Connector.OpenAi.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Scaleway\Rag.Connector.Scaleway.csproj" />
+    <ProjectReference Include="..\Rag.LlmRouter\Rag.LlmRouter.csproj" />
+    <ProjectReference Include="..\Rag.Abstractions\Rag.Abstractions.csproj" />
+    <ProjectReference Include="..\Rag.CommandLine\Rag.CommandLine.csproj" />
+    <ProjectReference Include="..\Rag.Logger.Extensions\Rag.Logger.Extensions.csproj" />
+    <ProjectReference Include="..\Rag.Startup.ConsoleApp\Rag.Startup.ConsoleApp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\input\nfs-2016-13.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\input\stafs-2025-1.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="data\templates\json.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\launchSettings.json">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

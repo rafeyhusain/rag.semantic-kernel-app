@@ -2,11 +2,11 @@
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
-using Rag.SemanticKernel.Abstractions.Parser;
-using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Guards;
-using Rag.SemanticKernel.Model.Llm.Embedding;
-using Rag.SemanticKernel.Rest;
+using Rag.Abstractions.Parser;
+using Rag.AppSettings;
+using Rag.Guards;
+using Rag.Model.Llm.Embedding;
+using Rag.Rest;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 

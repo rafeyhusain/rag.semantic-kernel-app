@@ -1,8 +1,8 @@
 ﻿using Microsoft.SemanticKernel;
-using Rag.SemanticKernel.Guards;
+using Rag.Guards;
 using Rag.Connector.Core.ChatCompletion;
 using Rag.Connector.Core.Embedding;
-using Rag.SemanticKernel.Model.Api;
+using Rag.Model.Api;
 using System.Text.Json;
 
 namespace Rag.Connector.Core.Api;

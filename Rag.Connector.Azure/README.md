@@ -1,26 +1,23 @@
 # Rag.Connector.Azure
 
-This project provides integration with Azure OpenAI services for the Semantic Kernel framework. It includes services for semantic operations and Azure-specific configurations.
+This folder contains Azure-specific connector implementations for the RAG system.
 
-## Features
+## Purpose
 
-- Azure OpenAI service integration
-- Semantic service implementation
-- Service extensions for easy configuration
+The Rag.Connector.Azure project provides:
+- Azure-specific service integrations
+- Azure authentication and authorization
+- Azure resource management
+- Azure-specific error handling
 
-## Configuration
+## Key Components
 
-The services can be configured through Azure OpenAI settings in your application configuration.
+- Azure service connectors
+- Azure authentication handlers
+- Azure resource management utilities
+- Azure-specific configuration
+- Error handling for Azure services
 
 ## Usage
 
-Add the following to your service collection:
-
-```csharp
-services.AddAzureSemanticServices(configuration);
-```
-
-## Dependencies
-
-- Microsoft.SemanticKernel
-- Azure OpenAI SDK 
+This project should be referenced by applications that need to interact with Azure services. It provides a structured way to connect to and use Azure services within the RAG system. 

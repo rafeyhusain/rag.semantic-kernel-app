@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Rag.Connector.Azure\Rag.Connector.Azure.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Berget\Rag.Connector.Berget.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Mistral\Rag.Connector.Mistral.csproj" />
+    <ProjectReference Include="..\Rag.Connector.OpenAi\Rag.Connector.OpenAi.csproj" />
+    <ProjectReference Include="..\Rag.Connector.Scaleway\Rag.Connector.Scaleway.csproj" />
+    <ProjectReference Include="..\Rag.SemanticKernel.Parser.Markdown\Rag.SemanticKernel.Parser.Markdown.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -53,8 +53,11 @@ public class RestService
         {
             queryString = ToQueryString(requestModel);
             url = $"{BaseUrl}/{endpoint}?{queryString}";
+            
             var response = await _policy.ExecuteAsync(() => _httpClient.GetAsync(url));
+            
             response.EnsureSuccessStatusCode();
+            
             return await response.Content.ReadAsStringAsync();
         }
         catch (BrokenCircuitException)
@@ -67,15 +70,18 @@ public class RestService
         }
     }
 
-    public async Task<string> PostAsync<T>(string endpoint, T requestModel, CancellationToken cancellationToken = default)
+    public async Task<string> PostAsync<T>(string endpoint, T requestModel)
     {
         try
         {
             var json = JsonSerializer.Serialize(requestModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var x = _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content);
-            var response = await _policy.ExecuteAsync(() => _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content, cancellationToken));
+            
+            var response = await _policy.ExecuteAsync(() => _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content));
+            
             response.EnsureSuccessStatusCode();
+            
             return await response.Content.ReadAsStringAsync();
         }
         catch (BrokenCircuitException)

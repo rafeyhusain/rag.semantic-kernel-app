@@ -50,9 +50,5 @@ public static class Log
         {
             File.WriteAllText(logFilePath, string.Empty);
         }
-        else
-        {
-            Console.WriteLine($"Log file not found: {logFilePath}");
-        }
     }
 }

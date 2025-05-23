@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.SemanticKernel.Llm.Mistral;
-using Rag.SemanticKernel.Model.Vector;
+using Rag.Connector.Mistral;
 
 #pragma warning disable SKEXP0001 // Some SK methods are still experimental
 
@@ -14,7 +13,7 @@ namespace Rag.SemanticKernel.WebApi.Controllers;
 public class QuestionController : ControllerBase
 {
     private readonly ILogger<QuestionController> _logger;
-    private readonly SemanticService<MarkdownDocument, Markdown> _semanticService;
+    private readonly SemanticService _semanticService;
     private readonly Kernel _kernel;
     private readonly VectorStoreTextSearch<Markdown> _searchService;
 
@@ -22,7 +21,7 @@ public class QuestionController : ControllerBase
         ILogger<QuestionController> logger,
         Kernel kernel,
         VectorStoreTextSearch<Markdown> searchService,
-        SemanticService<MarkdownDocument, Markdown> semanticService)
+        SemanticService semanticService)
     {
         _kernel = kernel;
         _searchService = searchService;

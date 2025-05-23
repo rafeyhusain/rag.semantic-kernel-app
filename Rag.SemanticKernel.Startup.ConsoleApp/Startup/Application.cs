@@ -21,9 +21,9 @@ public class Application
 
     public virtual async Task Init(string[] args)
     {
-        Log.Information("Starting application");
-
         Options = new CommandLineOptions(args);
+
+        Log.Information($"Starting application with pair[{Options.PairName}]");
 
         Logger.Extensions.Log.ClearLog();
 

@@ -1,8 +1,5 @@
 using Microsoft.Extensions.Options;
-using Rag.SemanticKernel.Llm.Core.Extensions;
 using Rag.SemanticKernel.AppSettings;
-using Rag.SemanticKernel.Model.Vector;
-using Rag.SemanticKernel.Parser.Markdown;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,17 +23,9 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddSingleton<IConfiguration>(configuration);
 
-builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.EmbeddingService<MarkdownDocument, Markdown>>();
-builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.ChatCompletionService>();
-builder.Services.AddTransient<Rag.SemanticKernel.Llm.Mistral.SemanticService<MarkdownDocument, Markdown>>();
-
-//builder.Services.AddSemanticService<MarkdownDocument, Markdown, MarkdownFileParser>(
-//    e.Settings,
-//    Rag.SemanticKernel.Abstractions.LlmModel.Llm.Mistral);
-
-//builder.Services.AddSemanticService(configuration);
-
-//builder.Services.AddSingleton<SemanticService>();
+builder.Services.AddTransient<Rag.Connector.Mistral.EmbeddingService>();
+builder.Services.AddTransient<Rag.Connector.Mistral.ChatCompletionService>();
+builder.Services.AddTransient<Rag.Connector.OpenAi.SemanticService>();
 
 builder.Host.UseSerilog();
 

@@ -15,9 +15,13 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4" />
+		<ProjectReference Include="..\Rag.Connector.Azure\Rag.Connector.Azure.csproj" />
+		<ProjectReference Include="..\Rag.Connector.Berget\Rag.Connector.Berget.csproj" />
+		<ProjectReference Include="..\Rag.Connector.Core\Rag.Connector.Core.csproj" />
+		<ProjectReference Include="..\Rag.Connector.Mistral\Rag.Connector.Mistral.csproj" />
+		<ProjectReference Include="..\Rag.Connector.OpenAi\Rag.Connector.OpenAi.csproj" />
+		<ProjectReference Include="..\Rag.Connector.Scaleway\Rag.Connector.Scaleway.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Abstractions\Rag.SemanticKernel.Abstractions.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Llm.Core\Rag.SemanticKernel.Llm.Core.csproj" />
-		<ProjectReference Include="..\Rag.SemanticKernel.Llm.Mistral\Rag.SemanticKernel.Llm.Mistral.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Logger.Extensions\Rag.SemanticKernel.Logger.Extensions.csproj" />
 		<ProjectReference Include="..\Rag.SemanticKernel.Startup.WebApp\Rag.SemanticKernel.Startup.WebApp.csproj" />
 	</ItemGroup>

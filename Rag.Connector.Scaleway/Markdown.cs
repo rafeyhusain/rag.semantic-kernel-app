@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
-using System;
 
 namespace Rag.Connector.Scaleway;
 

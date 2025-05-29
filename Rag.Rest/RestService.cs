@@ -10,7 +10,7 @@ using System.Web;
 
 namespace Rag.Rest;
 
-public class RestService 
+public class RestService
 {
     private readonly HttpClient _httpClient;
     private readonly ILogger<RestService> _logger;
@@ -53,11 +53,11 @@ public class RestService
         {
             queryString = ToQueryString(requestModel);
             url = $"{BaseUrl}/{endpoint}?{queryString}";
-            
+
             var response = await _policy.ExecuteAsync(() => _httpClient.GetAsync(url));
-            
+
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadAsStringAsync();
         }
         catch (BrokenCircuitException)
@@ -77,11 +77,11 @@ public class RestService
             var json = JsonSerializer.Serialize(requestModel);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
             var x = _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content);
-            
+
             var response = await _policy.ExecuteAsync(() => _httpClient.PostAsync($"{BaseUrl}/{endpoint}", content));
-            
+
             response.EnsureSuccessStatusCode();
-            
+
             return await response.Content.ReadAsStringAsync();
         }
         catch (BrokenCircuitException)

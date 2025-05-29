@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using Rag.Model.Api;
+﻿using Rag.Model.Api;
+using System.Text.Json;
 
 namespace Rag.LlmRouter;
 

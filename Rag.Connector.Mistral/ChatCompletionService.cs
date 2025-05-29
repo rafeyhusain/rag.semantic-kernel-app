@@ -1,8 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
-using Rag.Abstractions.LlmModel;
 using Rag.AppSettings;
 using Rag.Rest;
 
@@ -15,7 +13,7 @@ public class ChatCompletionService : Core.ChatCompletion.ChatCompletionService<M
 {
     public ChatCompletionService(
         Kernel kernel,
-        ILogger<ChatCompletionService> logger, 
+        ILogger<ChatCompletionService> logger,
         RestService restService,
         VectorStoreTextSearch<Markdown> searchService,
         ModelPairSettings pairSettings) : base(kernel, logger, restService, searchService, pairSettings)

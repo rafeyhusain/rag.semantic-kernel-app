@@ -1,17 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.ChatCompletion;
-using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.TextGeneration;
-using Rag.AppSettings;
-using Rag.Guards;
-using Rag.Model.Llm.ChatCompletion;
-using Rag.Rest;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Text.Json;
 
-namespace Rag.Connector.Core.ChatCompletion 
+namespace Rag.Connector.Core.ChatCompletion
 {
     public class TestService : ITextGenerationService
     {

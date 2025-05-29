@@ -1,18 +1,16 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.Embeddings;
 using Microsoft.SemanticKernel.TextGeneration;
+using Rag.Abstractions.Parser;
+using Rag.AppSettings;
 using Rag.Connector.Core.ChatCompletion;
 using Rag.Connector.Core.Embedding;
 using Rag.Connector.Core.Plugins;
-using Rag.Abstractions.Parser;
-using Rag.AppSettings;
-using Rag.Parser.Markdown;
 using Rag.Rest;
 
 namespace Rag.Connector.Core.Extensions;
@@ -25,7 +23,7 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Registers semantic services for the given pairSettings name and document type.
     /// </summary>
-    public static void AddSemanticService<TRecord, P>(this IServiceCollection services, Settings settings, string modelPair) 
+    public static void AddSemanticService<TRecord, P>(this IServiceCollection services, Settings settings, string modelPair)
         where TRecord : class
         where P : class, IFileParser
     {
@@ -37,7 +35,7 @@ public static class ServiceCollectionExtensions
         kernelBuilder.Services.AddTransient<ITextEmbeddingGenerationService, EmbeddingService<TRecord>>();
         kernelBuilder.Services.AddTransient<IChatCompletionService, ChatCompletionService<TRecord>>();
         kernelBuilder.Services.AddTransient<ITextGenerationService, ChatCompletionService<TRecord>>();
-        
+
         services.AddTransient<IFileParser, P>();
         services.AddTransient<VectorStoreTextSearch<TRecord>>();
         services.AddTransient<ModelPairSettings>();

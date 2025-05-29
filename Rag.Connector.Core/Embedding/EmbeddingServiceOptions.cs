@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-
-namespace Rag.Connector.Core.Embedding;
+﻿namespace Rag.Connector.Core.Embedding;
 
 public class EmbeddingServiceOptions
 {

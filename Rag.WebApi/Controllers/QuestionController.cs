@@ -1,11 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Data;
-using Rag.Connector.Mistral;
-using Rag.LlmRouter;
 using Rag.Guards;
-
-#pragma warning disable SKEXP0001 // Some SK methods are still experimental
+using Rag.LlmRouter;
 
 namespace Rag.WebApi.Controllers;
 

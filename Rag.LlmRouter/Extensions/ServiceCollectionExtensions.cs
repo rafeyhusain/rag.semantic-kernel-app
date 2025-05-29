@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Rag.Connector.Core.Extensions;
 using Rag.Abstractions.Pairs;
 using Rag.AppSettings;
+using Rag.Connector.Core.Extensions;
 using Rag.Parser.Markdown;
 
 namespace Rag.LlmRouter.Extensions;

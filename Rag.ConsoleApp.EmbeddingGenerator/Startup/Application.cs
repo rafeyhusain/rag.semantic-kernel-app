@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Rag.AppSettings;
 using Rag.LlmRouter;
 using Rag.LlmRouter.Extensions;
-using Rag.AppSettings;
 using Rag.Startup.ConsoleApp.Events;
 using System.Threading.Tasks;
 
@@ -11,7 +11,7 @@ public class Application : Rag.Startup.ConsoleApp.Startup.Application
 {
     private readonly Router _router;
     private Settings _settings;
-    
+
     public Application()
     {
         this.BeforeServiceContainerCreated += Application_BeforeServiceContainerCreated;

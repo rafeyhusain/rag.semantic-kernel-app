@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.Extensions.VectorData;
+﻿using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel.Data;
 
 namespace Rag.Core.Sdk.Service.Azure;

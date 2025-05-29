@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using Microsoft.SemanticKernel;
+﻿using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Data;
 
 namespace Rag.Connector.Core.Plugins;

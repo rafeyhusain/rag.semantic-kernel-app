@@ -5,12 +5,10 @@ using Microsoft.SemanticKernel.Data;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Microsoft.SemanticKernel.TextGeneration;
 using Rag.AppSettings;
-using Rag.Guards;
 using Rag.Connector.Core.Plugins;
+using Rag.Guards;
 using Rag.Model.Llm.ChatCompletion;
 using Rag.Rest;
-using System.Net.Http.Headers;
-using System.Text;
 using System.Text.Json;
 
 namespace Rag.Connector.Core.ChatCompletion;
@@ -28,7 +26,7 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
     private readonly VectorStoreTextSearch<TRecord> _searchService;
 
     public ChatCompletionService(
-        Kernel kernel, 
+        Kernel kernel,
         ILogger<ChatCompletionService<TRecord>> logger,
         RestService restService,
         VectorStoreTextSearch<TRecord> searchService,
@@ -96,7 +94,7 @@ public class ChatCompletionService<TRecord> : IChatCompletionService, ITextGener
 
             return result;
         }
-        catch (Exception ex) 
+        catch (Exception ex)
         {
             _logger.LogError(ex, "Error ChatCompletion.Ask");
             throw;

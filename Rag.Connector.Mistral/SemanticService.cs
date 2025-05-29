@@ -7,7 +7,7 @@ public class SemanticService : Core.Api.SemanticService<Markdown>
     public SemanticService(
         Kernel kernel,
         ChatCompletionService chatCompletionService,
-        EmbeddingService embeddingService) 
+        EmbeddingService embeddingService)
         : base(kernel, chatCompletionService, embeddingService)
     {
     }

@@ -23,7 +23,7 @@ public class EmbeddingService : Core.Embedding.EmbeddingService<Markdown>
     {
         RefreshModelPair();
     }
-    
+
     public override string PairName => Abstractions.Pairs.ModelPairs.OpenAi;
     protected override async Task UpsertAsync(
     string id,

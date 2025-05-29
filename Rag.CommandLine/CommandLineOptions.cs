@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Rag.CommandLine;
+﻿namespace Rag.CommandLine;
 
 
 public class CommandLineOptions

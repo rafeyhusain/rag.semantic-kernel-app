@@ -3,7 +3,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.SemanticKernel.TextGeneration;
 using Rag.AppSettings;
 using Rag.CommandLine;
 using Rag.Startup.ConsoleApp.Events;
